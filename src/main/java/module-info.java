@@ -1,4 +1,4 @@
-module com.mechanitis.demo.javafxgradle {
+module com.mechanitis.demo.quadrapassel {
     requires javafx.controls;
-    exports com.mechanitis.demo.javafxgradle;
+    exports com.mechanitis.demo.quadrapassel;
 }
