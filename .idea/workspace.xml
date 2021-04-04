@@ -5,16 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d17ac18b-fe26-48af-aead-1758a523d1ca" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/javafx-gradle.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/quadrapassel.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/_template__of_Gradle.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/GameplayScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/GameplayScene.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P3.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P3.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P4.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P4.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P5.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P5.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P6.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P6.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P7.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P7.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/Piece.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/Piece.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,6 +104,29 @@
       <option name="presentableId" value="Default" />
       <updated>1617559475304</updated>
     </task>
+    <task id="LOCAL-00001" summary="Static + Rows">
+      <created>1617568414799</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1617568414799</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Static + Rows" />
+    <option name="LAST_COMMIT_MESSAGE" value="Static + Rows" />
   </component>
 </project>

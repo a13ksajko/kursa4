@@ -4,6 +4,8 @@ public class P4 extends Piece{
     public P4() {
         npositions = 4;
         positions = new Position[npositions];
+        for(int i=0;i<npositions;i++)
+            positions[i]=new Position();
         current_position = 0;
         positions[0].matrix[0][0]=true;
         positions[0].matrix[1][0]=true;

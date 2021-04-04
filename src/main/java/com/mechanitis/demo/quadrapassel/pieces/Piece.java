@@ -16,10 +16,13 @@ public abstract class Piece {
     protected boolean checkPosition(boolean[][] grid, int position){
         for(int i=0;i<4;i++){
             for(int j=0;j<4;j++){
-                if(grid[i][j]==positions[position].matrix[i][j])return false;
+                if(grid[i][j]&&positions[position].matrix[i][j])return false;
             }
         }
         return true;
+    }
+    public boolean[][] getCurrentPosition(){
+        return positions[current_position].matrix;
     }
     public boolean checkThisPosition(boolean[][] grid){
         return checkPosition(grid,current_position);

@@ -1,5 +1,6 @@
 package com.mechanitis.demo.quadrapassel;
 
+import com.mechanitis.demo.quadrapassel.pieces.*;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -21,8 +22,9 @@ public class GameplayScene extends Scene {
     int grid_width = 14;
     QuadrapasselGrid grid = null;
     Contents[][] CurrentBuffer = new Contents[grid_width][grid_height];
-
-    ;
+    Piece piece=null;
+    int piecex=0;
+    int piecey=0;
     Contents[][] DesiredBuffer = new Contents[grid_width][grid_height];
     Random r = new Random();
     Thread simulator;
@@ -54,13 +56,74 @@ public class GameplayScene extends Scene {
         this.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.SPACE) SpawnNewBlock();
-                if (event.getCode() == KeyCode.ENTER) {
-                    for (int i = 0; i < grid_width; i++) {
-                        for (int j = 1; j < grid_height; j++) {
-                            DesiredBuffer[i][j] = Contents.BLUE;
+
+                if(event.getCode()==KeyCode.LEFT){
+                    boolean[][] matrix = new boolean[4][4];
+                    int piecex_new = piecex - 1;
+                    int piecey_new = piecey;
+                    for (int i = 0; i < 4; i++)
+                        for (int j = 0; j < 4; j++) {
+                            if (piecex_new + i >= grid_width) {
+                                matrix[i][j] = true;
+                                continue;
+                            }
+                            if (piecey_new + j >= grid_height) {
+                                matrix[i][j] = true;
+                                continue;
+                            }
+                            matrix[i][j] = (DesiredBuffer[piecex_new + i][piecey_new + j] == Contents.STATIC);
                         }
+                    if (piece.checkThisPosition(matrix)) {
+                        piecex=piecex_new;
+                        piecey=piecey_new;
+                        simulate(false);
                     }
+
+                }
+                if(event.getCode()==KeyCode.RIGHT){
+                    boolean[][] matrix = new boolean[4][4];
+                    int piecex_new = piecex + 1;
+                    int piecey_new = piecey;
+                    for (int i = 0; i < 4; i++)
+                        for (int j = 0; j < 4; j++) {
+                            if (piecex_new + i >= grid_width) {
+                                matrix[i][j] = true;
+                                continue;
+                            }
+                            if (piecey_new + j >= grid_height) {
+                                matrix[i][j] = true;
+                                continue;
+                            }
+                            matrix[i][j] = (DesiredBuffer[piecex_new + i][piecey_new + j] == Contents.STATIC);
+                        }
+                    if (piece.checkThisPosition(matrix)) {
+                        piecex=piecex_new;
+                        piecey=piecey_new;
+                        simulate(false);
+                    }
+
+                }
+                if(event.getCode()==KeyCode.UP){
+                    boolean[][] matrix = new boolean[4][4];
+                    int piecex_new = piecex;
+                    int piecey_new = piecey;
+                    for (int i = 0; i < 4; i++)
+                        for (int j = 0; j < 4; j++) {
+                            if (piecex_new + i >= grid_width) {
+                                matrix[i][j] = true;
+                                continue;
+                            }
+                            if (piecey_new + j >= grid_height) {
+                                matrix[i][j] = true;
+                                continue;
+                            }
+                            matrix[i][j] = (DesiredBuffer[piecex_new + i][piecey_new + j] == Contents.STATIC);
+                        }
+                    if (piece.checkNextPosition(matrix)) {
+                        piece.NextPosition();
+                        simulate(false);
+                    }
+
                 }
             }
         });
@@ -92,12 +155,6 @@ public class GameplayScene extends Scene {
         simulator.interrupt();
     }
 
-    private void SpawnNewBlock() {
-        int i = r.nextInt(grid.width);
-        int j = 0;
-        DesiredBuffer[i][j] = Contents.BLUE;
-    }
-
     public void Run() {
 
         //Platform.runLater(new BuffersSync(CurrentBuffer,DesiredBuffer,grid));
@@ -110,57 +167,51 @@ public class GameplayScene extends Scene {
     enum Contents {
         EMPTY, BLUE, STATIC
     }
-
-    private class Simulate implements Runnable {
-
-        @Override
-        public void run() {
-            Contents[][] OldBuffer, IntermediateBuffer;
-            OldBuffer = new Contents[grid_width][grid_height];
-            IntermediateBuffer = new Contents[grid_width][grid_height];
-            while (true) {
-                for (int i = 0; i < grid.width; i++) {
-                    for (int j = 0; j < grid.height; j++) {
-                        OldBuffer[i][j] = DesiredBuffer[i][j];
-                        DesiredBuffer[i][j] = Contents.EMPTY;
-                        IntermediateBuffer[i][j] = Contents.EMPTY;
-                    }
-                }
-                boolean isempty, isstatic;
-                for (int i = 0; i < grid.width; i++) {
-                    for (int j = 0; j < grid.height; j++) {
-                        if (OldBuffer[i][j] == Contents.EMPTY) continue;
-                        if (OldBuffer[i][j] == Contents.STATIC) {
-                            IntermediateBuffer[i][j] = Contents.STATIC;
+    Contents[][] OldBuffer= new Contents[grid_width][grid_height], IntermediateBuffer= new Contents[grid_width][grid_height];
+    private void simulate(boolean movedown){
+        for (int i = 0; i < grid.width; i++) {
+            for (int j = 0; j < grid.height; j++) {
+                OldBuffer[i][j] = DesiredBuffer[i][j];
+                DesiredBuffer[i][j] = Contents.EMPTY;
+                IntermediateBuffer[i][j] = (OldBuffer[i][j]==Contents.STATIC)?Contents.STATIC:Contents.EMPTY;
+            }
+        }
+        if(piece!=null) {
+            boolean[][] matrix = new boolean[4][4];
+            if(movedown) {
+                int piecey_new = piecey + 1;
+                for (int i = 0; i < 4; i++)
+                    for (int j = 0; j < 4; j++) {
+                        if (piecex + i >= grid_width) {
+                            matrix[i][j] = true;
                             continue;
                         }
-                        if (OldBuffer[i][j] == Contents.BLUE) {
-                            if (j == grid_height - 1) {
-                                IntermediateBuffer[i][j] = Contents.STATIC;
-                                continue;
-                            }
-                            isempty = false;
-                            isstatic = false;
-                            for (int k = j + 1; k < grid_height; k++) {
-                                if (OldBuffer[i][k] == Contents.STATIC) {
-                                    isstatic = true;
-                                    break;
-                                }
-                                if (OldBuffer[i][k] == Contents.EMPTY) {
-                                    isempty = true;
-                                    break;
-                                }
-                            }
-                            if (isempty) {
-                                IntermediateBuffer[i][j + 1] = Contents.BLUE;
-                            }
-                            if (isstatic || (!isempty)) {
-                                IntermediateBuffer[i][j] = Contents.STATIC;
-                            }
+                        if (piecey_new + j >= grid_height) {
+                            matrix[i][j] = true;
+                            continue;
                         }
-
+                        matrix[i][j] = (IntermediateBuffer[piecex + i][piecey_new + j] == Contents.STATIC);
                     }
+                if (!piece.checkThisPosition(matrix)) {
+                    matrix = piece.getCurrentPosition();
+                    for (int i = 0; i < 4; i++)
+                        for (int j = 0; j < 4; j++) {
+                            if (matrix[i][j]) IntermediateBuffer[piecex + i][piecey + j] = Contents.STATIC;
+                        }
+                    SpawnNewPiece();
+                } else {
+                    piecey = piecey_new;
                 }
+            }
+            matrix = piece.getCurrentPosition();
+            for (int i = 0; i < 4; i++)
+                for (int j = 0; j < 4; j++) {
+                    if (matrix[i][j]) IntermediateBuffer[piecex + i][piecey + j] = Contents.BLUE;
+                }
+        }else{
+            SpawnNewPiece();
+        }
+
                 boolean fullline=true;
                 int linesremoved=0;
                 for (int j = 0; j < grid.height; j++) {
@@ -195,18 +246,41 @@ public class GameplayScene extends Scene {
                         }
                     }
                 }
-                for (int i = 0; i < grid.width; i++) {
-                    for (int j = 0; j < grid.height; j++) {
-                        DesiredBuffer[i][j]=IntermediateBuffer[i][j];
-                    }
-                }
-                        try {
-                    TimeUnit.MILLISECONDS.sleep(1000);
+
+        for (int i = 0; i < grid.width; i++) {
+            for (int j = 0; j < grid.height; j++) {
+                DesiredBuffer[i][j]=IntermediateBuffer[i][j];
+            }
+        }
+
+
+    }
+    private class Simulate implements Runnable {
+
+        @Override
+        public void run() {
+            while (true) {
+                simulate(true);
+                try {
+                    TimeUnit.MILLISECONDS.sleep(100);
                 } catch (InterruptedException e) {
                     return;
                 }
             }
         }
+    }
+
+    private void SpawnNewPiece() {
+        int npiece = r.nextInt(7);
+        if(npiece==0)piece=new P1();
+        if(npiece==1)piece=new P2();
+        if(npiece==2)piece=new P3();
+        if(npiece==3)piece=new P4();
+        if(npiece==4)piece=new P5();
+        if(npiece==5)piece=new P6();
+        if(npiece==6)piece=new P7();
+        piecex=5;
+        piecey=0;
     }
 
     private class BuffersSync implements Runnable {
