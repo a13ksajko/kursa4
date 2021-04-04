@@ -177,7 +177,7 @@ public class GameplayScene extends Scene {
     enum Contents {
         EMPTY, BLUE, STATIC
     }
-    private void movedown(){
+    private synchronized void movedown(){
         boolean[][] matrix = new boolean[4][4];
             int piecey_new = piecey + 1;
             for (int i = 0; i < 4; i++)
@@ -205,7 +205,7 @@ public class GameplayScene extends Scene {
         }
 
 
-    private void redraw(){
+    private synchronized void redraw(){
         Contents[][] OldBuffer= new Contents[grid_width][grid_height], IntermediateBuffer= new Contents[grid_width][grid_height];
         for (int i = 0; i < grid.width; i++) {
             for (int j = 0; j < grid.height; j++) {
@@ -307,6 +307,22 @@ public class GameplayScene extends Scene {
         if(npiece==6)piece=new P7();
         piecex=5;
         piecey=0;
+        boolean[][] matrix = new boolean[4][4];
+        int piecex_new = piecex;
+        int piecey_new = piecey;
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++) {
+                if ((piecex_new + i >= grid_width)||(piecex_new+i<0)) {
+                    matrix[i][j] = true;
+                    continue;
+                }
+                if ((piecey_new + j >= grid_height)||(piecey_new+j<0)) {
+                    matrix[i][j] = true;
+                    continue;
+                }
+                matrix[i][j] = (DesiredBuffer[piecex_new + i][piecey_new + j] == Contents.STATIC);
+            }
+        if(!piece.checkThisPosition(matrix))Die();
     }
 
     private class BuffersSync implements Runnable {
