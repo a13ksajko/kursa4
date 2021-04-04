@@ -17,88 +17,16 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class GameplayScene extends Scene {
-    public void Die() {
-        syncer.interrupt();
-        simulator.interrupt();
-    }
-
-    private class Simulate implements Runnable {
-
-        @Override
-        public void run() {
-            Contents[][] OldBuffer;
-            OldBuffer = new Contents[grid_width][grid_height];
-            while (true) {
-                for (int i = 0; i < grid.width; i++) {
-                    for (int j = 0; j < grid.height; j++) {
-                        OldBuffer[i][j] = DesiredBuffer[i][j];
-                    }
-                }
-                for (int i = 0; i < grid.width; i++) {
-                    for (int j = 0; j < grid.height; j++) {
-                            if (j >0)
-                                DesiredBuffer[i][j] = OldBuffer[i][j-1];
-                            else
-                                DesiredBuffer[i][j]=Contents.EMPTY;
-
-                    }
-                }
-                //           Platform.runLater(new BuffersSync());
-                System.out.println("Simulated");
-
-                try {
-                    TimeUnit.MILLISECONDS.sleep(1000);
-                } catch (InterruptedException e) {
-                    return;
-                }
-            }
-        }
-    }
-
-    private class BuffersSync implements Runnable {
-
-        @Override
-        public void run() {
-            while (true) {
-                for (int i = 0; i < grid.width; i++) {
-                    for (int j = 0; j < grid.height; j++) {
-                        if (CurrentBuffer[i][j] != DesiredBuffer[i][j]) {
-                            Rectangle rectangle = (Rectangle) getNodeFromGridPane(grid, i, j);
-                            int finalI = i;
-                            int finalJ = j;
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    rectangle.setFill((DesiredBuffer[finalI][finalJ] == Contents.BLUE) ? Color.BLUE : Color.gray(0.6));
-                                    setNodeFromGridPane(grid, finalI, finalJ, rectangle);
-                                    CurrentBuffer[finalI][finalJ] = DesiredBuffer[finalI][finalJ];
-                                }
-                            });
-
-                        }
-                    }
-                }
-                try {
-                    TimeUnit.MILLISECONDS.sleep(17);
-                } catch (InterruptedException e) {
-                    return;
-                }
-                //   System.out.println("Synced");
-            }
-        }
-    }
-
-    enum Contents {
-        EMPTY, BLUE
-    }
-
-    ;
     int grid_height = 20;
     int grid_width = 14;
     QuadrapasselGrid grid = null;
     Contents[][] CurrentBuffer = new Contents[grid_width][grid_height];
-    Contents[][] DesiredBuffer = new Contents[grid_width][grid_height];
 
+    ;
+    Contents[][] DesiredBuffer = new Contents[grid_width][grid_height];
+    Random r = new Random();
+    Thread simulator;
+    Thread syncer;
     public GameplayScene(Parent root, double width, double height) {
         super(root, width, height);
         AnchorPane rootpane = (AnchorPane) root;
@@ -127,7 +55,7 @@ public class GameplayScene extends Scene {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.SPACE) SpawnNewBlock();
-                if(event.getCode()==KeyCode.ENTER){
+                if (event.getCode() == KeyCode.ENTER) {
                     for (int i = 0; i < grid_width; i++) {
                         for (int j = 1; j < grid_height; j++) {
                             DesiredBuffer[i][j] = Contents.BLUE;
@@ -136,26 +64,6 @@ public class GameplayScene extends Scene {
                 }
             }
         });
-    }
-
-    Random r = new Random();
-
-    private void SpawnNewBlock() {
-        int i = r.nextInt(grid.width);
-        int j = 0;
-        DesiredBuffer[i][j] = Contents.BLUE;
-    }
-
-    Thread simulator;
-    Thread syncer;
-
-    public void Run() {
-
-        //Platform.runLater(new BuffersSync(CurrentBuffer,DesiredBuffer,grid));
-        simulator = new Thread(new Simulate());
-        simulator.start();
-        syncer = new Thread(new BuffersSync());
-        syncer.start();
     }
 
     public static Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
@@ -177,6 +85,160 @@ public class GameplayScene extends Scene {
         }
         gridPane.getChildren().set(gridPane.getChildren().indexOf(tobereplaced), newnode);
         return null;
+    }
+
+    public void Die() {
+        syncer.interrupt();
+        simulator.interrupt();
+    }
+
+    private void SpawnNewBlock() {
+        int i = r.nextInt(grid.width);
+        int j = 0;
+        DesiredBuffer[i][j] = Contents.BLUE;
+    }
+
+    public void Run() {
+
+        //Platform.runLater(new BuffersSync(CurrentBuffer,DesiredBuffer,grid));
+        simulator = new Thread(new Simulate());
+        simulator.start();
+        syncer = new Thread(new BuffersSync());
+        syncer.start();
+    }
+
+    enum Contents {
+        EMPTY, BLUE, STATIC
+    }
+
+    private class Simulate implements Runnable {
+
+        @Override
+        public void run() {
+            Contents[][] OldBuffer, IntermediateBuffer;
+            OldBuffer = new Contents[grid_width][grid_height];
+            IntermediateBuffer = new Contents[grid_width][grid_height];
+            while (true) {
+                for (int i = 0; i < grid.width; i++) {
+                    for (int j = 0; j < grid.height; j++) {
+                        OldBuffer[i][j] = DesiredBuffer[i][j];
+                        DesiredBuffer[i][j] = Contents.EMPTY;
+                        IntermediateBuffer[i][j] = Contents.EMPTY;
+                    }
+                }
+                boolean isempty, isstatic;
+                for (int i = 0; i < grid.width; i++) {
+                    for (int j = 0; j < grid.height; j++) {
+                        if (OldBuffer[i][j] == Contents.EMPTY) continue;
+                        if (OldBuffer[i][j] == Contents.STATIC) {
+                            IntermediateBuffer[i][j] = Contents.STATIC;
+                            continue;
+                        }
+                        if (OldBuffer[i][j] == Contents.BLUE) {
+                            if (j == grid_height - 1) {
+                                IntermediateBuffer[i][j] = Contents.STATIC;
+                                continue;
+                            }
+                            isempty = false;
+                            isstatic = false;
+                            for (int k = j + 1; k < grid_height; k++) {
+                                if (OldBuffer[i][k] == Contents.STATIC) {
+                                    isstatic = true;
+                                    break;
+                                }
+                                if (OldBuffer[i][k] == Contents.EMPTY) {
+                                    isempty = true;
+                                    break;
+                                }
+                            }
+                            if (isempty) {
+                                IntermediateBuffer[i][j + 1] = Contents.BLUE;
+                            }
+                            if (isstatic || (!isempty)) {
+                                IntermediateBuffer[i][j] = Contents.STATIC;
+                            }
+                        }
+
+                    }
+                }
+                boolean fullline=true;
+                int linesremoved=0;
+                for (int j = 0; j < grid.height; j++) {
+                    fullline=true;
+                    for (int i = 0; i < grid.width; i++) {
+                        if(IntermediateBuffer[i][j]==Contents.BLUE)fullline=false;
+                        if(IntermediateBuffer[i][j]==Contents.EMPTY)fullline=false;
+                    }
+                    if(fullline){
+                        for (int i = 0; i < grid.width; i++) {
+                            IntermediateBuffer[i][j]=Contents.EMPTY;
+                        }
+                        linesremoved+=1;
+                    }
+                }
+                boolean flag=false;
+                if(linesremoved>0){
+                    for (int i = 0; i < grid.width; i++) {
+                        flag=false;
+                        for (int j = grid_height-1; j >=0; j--) {
+                            if(IntermediateBuffer[i][j]==Contents.EMPTY){
+                                if(!flag){
+                                    flag=true;
+                                    continue;
+                                }
+                            }
+                            if(flag)
+                            if(IntermediateBuffer[i][j]==Contents.STATIC){
+                                IntermediateBuffer[i][j]=Contents.EMPTY;
+                                IntermediateBuffer[i][j+linesremoved]=Contents.STATIC;
+                            }
+                        }
+                    }
+                }
+                for (int i = 0; i < grid.width; i++) {
+                    for (int j = 0; j < grid.height; j++) {
+                        DesiredBuffer[i][j]=IntermediateBuffer[i][j];
+                    }
+                }
+                        try {
+                    TimeUnit.MILLISECONDS.sleep(1000);
+                } catch (InterruptedException e) {
+                    return;
+                }
+            }
+        }
+    }
+
+    private class BuffersSync implements Runnable {
+
+        @Override
+        public void run() {
+            while (true) {
+                for (int i = 0; i < grid.width; i++) {
+                    for (int j = 0; j < grid.height; j++) {
+                        if (CurrentBuffer[i][j] != DesiredBuffer[i][j]) {
+                            Rectangle rectangle = (Rectangle) getNodeFromGridPane(grid, i, j);
+                            int finalI = i;
+                            int finalJ = j;
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    rectangle.setFill((DesiredBuffer[finalI][finalJ] == Contents.BLUE) ? Color.BLUE : (DesiredBuffer[finalI][finalJ] == Contents.STATIC) ? Color.gray(0.4) : Color.gray(0.6));
+                                    setNodeFromGridPane(grid, finalI, finalJ, rectangle);
+                                    CurrentBuffer[finalI][finalJ] = DesiredBuffer[finalI][finalJ];
+                                }
+                            });
+
+                        }
+                    }
+                }
+                try {
+                    TimeUnit.MILLISECONDS.sleep(17);
+                } catch (InterruptedException e) {
+                    return;
+                }
+            }
+        }
     }
 
 }
