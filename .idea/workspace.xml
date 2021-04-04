@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d17ac18b-fe26-48af-aead-1758a523d1ca" name="Default Changelist" comment="Fix">
+    <list default="true" id="d17ac18b-fe26-48af-aead-1758a523d1ca" name="Default Changelist" comment="Dynamic difficulty">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/GameplayScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/GameplayScene.java" afterDir="false" />
     </list>
@@ -117,7 +117,14 @@
       <option name="project" value="LOCAL" />
       <updated>1617574449672</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Dynamic difficulty">
+      <created>1617575988675</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1617575988675</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -135,6 +142,7 @@
     <MESSAGE value="Static + Rows" />
     <MESSAGE value="It works" />
     <MESSAGE value="Fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix" />
+    <MESSAGE value="Dynamic difficulty" />
+    <option name="LAST_COMMIT_MESSAGE" value="Dynamic difficulty" />
   </component>
 </project>
