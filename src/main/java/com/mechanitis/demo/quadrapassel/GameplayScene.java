@@ -1,10 +1,7 @@
 package com.mechanitis.demo.quadrapassel;
 
 import javafx.application.Platform;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -25,31 +22,29 @@ public class GameplayScene extends Scene {
         simulator.interrupt();
     }
 
-    private class Simulate implements Runnable{
+    private class Simulate implements Runnable {
 
         @Override
         public void run() {
             Contents[][] OldBuffer;
-            while(true) {
-                OldBuffer = new Contents[grid_width][grid_height];
+            OldBuffer = new Contents[grid_width][grid_height];
+            while (true) {
                 for (int i = 0; i < grid.width; i++) {
                     for (int j = 0; j < grid.height; j++) {
-                        OldBuffer[i][j]=DesiredBuffer[i][j];
+                        OldBuffer[i][j] = DesiredBuffer[i][j];
                     }
                 }
                 for (int i = 0; i < grid.width; i++) {
                     for (int j = 0; j < grid.height; j++) {
-                        if(OldBuffer[i][j]==Contents.BLUE){
-                            if(j<(grid.height-1))
-                                DesiredBuffer[i][j+1]=Contents.BLUE;
-                            DesiredBuffer[i][j]=Contents.EMPTY;
+                            if (j >0)
+                                DesiredBuffer[i][j] = OldBuffer[i][j-1];
+                            else
+                                DesiredBuffer[i][j]=Contents.EMPTY;
 
-
-                        }
                     }
                 }
-     //           Platform.runLater(new BuffersSync());
-                 System.out.println("Simulated");
+                //           Platform.runLater(new BuffersSync());
+                System.out.println("Simulated");
 
                 try {
                     TimeUnit.MILLISECONDS.sleep(1000);
@@ -59,11 +54,12 @@ public class GameplayScene extends Scene {
             }
         }
     }
+
     private class BuffersSync implements Runnable {
 
         @Override
         public void run() {
-            while(true) {
+            while (true) {
                 for (int i = 0; i < grid.width; i++) {
                     for (int j = 0; j < grid.height; j++) {
                         if (CurrentBuffer[i][j] != DesiredBuffer[i][j]) {
@@ -75,7 +71,7 @@ public class GameplayScene extends Scene {
                                 public void run() {
                                     rectangle.setFill((DesiredBuffer[finalI][finalJ] == Contents.BLUE) ? Color.BLUE : Color.gray(0.6));
                                     setNodeFromGridPane(grid, finalI, finalJ, rectangle);
-                                    CurrentBuffer[finalI][finalJ]=DesiredBuffer[finalI][finalJ];
+                                    CurrentBuffer[finalI][finalJ] = DesiredBuffer[finalI][finalJ];
                                 }
                             });
 
@@ -87,23 +83,27 @@ public class GameplayScene extends Scene {
                 } catch (InterruptedException e) {
                     return;
                 }
-             //   System.out.println("Synced");
+                //   System.out.println("Synced");
             }
         }
     }
+
     enum Contents {
         EMPTY, BLUE
-    };
-    int grid_height=20;
-    int grid_width=14;
-    QuadrapasselGrid grid=null;
+    }
+
+    ;
+    int grid_height = 20;
+    int grid_width = 14;
+    QuadrapasselGrid grid = null;
     Contents[][] CurrentBuffer = new Contents[grid_width][grid_height];
     Contents[][] DesiredBuffer = new Contents[grid_width][grid_height];
+
     public GameplayScene(Parent root, double width, double height) {
         super(root, width, height);
         AnchorPane rootpane = (AnchorPane) root;
         this.fillProperty().setValue(Color.gray(0.2));
-        grid = new QuadrapasselGrid(grid_width,grid_height);
+        grid = new QuadrapasselGrid(grid_width, grid_height);
         grid.setHgap(5);
         grid.setVgap(5);
         grid.setAlignment(Pos.CENTER);
@@ -114,8 +114,8 @@ public class GameplayScene extends Scene {
                 rectangle.setWidth(20.0);
                 rectangle.setFill(Color.gray(0.6));
                 grid.add(rectangle, i, j);
-                CurrentBuffer[i][j]=Contents.EMPTY;
-                DesiredBuffer[i][j]=Contents.EMPTY;
+                CurrentBuffer[i][j] = Contents.EMPTY;
+                DesiredBuffer[i][j] = Contents.EMPTY;
             }
         }
         AnchorPane.setTopAnchor(grid, 10.0);
@@ -126,20 +126,30 @@ public class GameplayScene extends Scene {
         this.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if(event.getCode()== KeyCode.SPACE)SpawnNewBlock();
+                if (event.getCode() == KeyCode.SPACE) SpawnNewBlock();
+                if(event.getCode()==KeyCode.ENTER){
+                    for (int i = 0; i < grid_width; i++) {
+                        for (int j = 1; j < grid_height; j++) {
+                            DesiredBuffer[i][j] = Contents.BLUE;
+                        }
+                    }
+                }
             }
         });
     }
+
     Random r = new Random();
 
     private void SpawnNewBlock() {
-        int i=r.nextInt(grid.width);
-        int j=0;
-        DesiredBuffer[i][j]=Contents.BLUE;
+        int i = r.nextInt(grid.width);
+        int j = 0;
+        DesiredBuffer[i][j] = Contents.BLUE;
     }
+
     Thread simulator;
     Thread syncer;
-    public void Run(){
+
+    public void Run() {
 
         //Platform.runLater(new BuffersSync(CurrentBuffer,DesiredBuffer,grid));
         simulator = new Thread(new Simulate());
@@ -147,6 +157,7 @@ public class GameplayScene extends Scene {
         syncer = new Thread(new BuffersSync());
         syncer.start();
     }
+
     public static Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
         for (Node node : gridPane.getChildren()) {
             if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
@@ -155,15 +166,16 @@ public class GameplayScene extends Scene {
         }
         return null;
     }
+
     public static Node setNodeFromGridPane(GridPane gridPane, int col, int row, Node newnode) {
-        Node tobereplaced=null;
+        Node tobereplaced = null;
         for (Node node : gridPane.getChildren()) {
             if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
-                tobereplaced=node;
+                tobereplaced = node;
                 break;
             }
         }
-        gridPane.getChildren().set(gridPane.getChildren().indexOf(tobereplaced),newnode);
+        gridPane.getChildren().set(gridPane.getChildren().indexOf(tobereplaced), newnode);
         return null;
     }
 
