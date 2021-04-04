@@ -18,6 +18,7 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class GameplayScene extends Scene {
+    int delay=350;
     int grid_height = 20;
     int grid_width = 14;
     QuadrapasselGrid grid = null;
@@ -29,6 +30,7 @@ public class GameplayScene extends Scene {
     Random r = new Random();
     Thread simulator;
     Thread syncer;
+    Thread difficulty;
     public GameplayScene(Parent root, double width, double height) {
         super(root, width, height);
         AnchorPane rootpane = (AnchorPane) root;
@@ -76,7 +78,7 @@ public class GameplayScene extends Scene {
                     if (piece.checkThisPosition(matrix)) {
                         piecex=piecex_new;
                         piecey=piecey_new;
-                        simulate(false);
+                        redraw();
                     }
 
                 }
@@ -99,7 +101,7 @@ public class GameplayScene extends Scene {
                     if (piece.checkThisPosition(matrix)) {
                         piecex=piecex_new;
                         piecey=piecey_new;
-                        simulate(false);
+                        redraw();
                     }
 
                 }
@@ -121,12 +123,13 @@ public class GameplayScene extends Scene {
                         }
                     if (piece.checkNextPosition(matrix)) {
                         piece.NextPosition();
-                        simulate(false);
+                        redraw();
                     }
 
                 }
                 if(event.getCode()==KeyCode.DOWN) {
-                    simulate(true);
+                    movedown();
+                    redraw();
                 }
             }
         });
@@ -156,11 +159,15 @@ public class GameplayScene extends Scene {
     public void Die() {
         syncer.interrupt();
         simulator.interrupt();
+        difficulty.interrupt();
     }
 
     public void Run() {
 
         //Platform.runLater(new BuffersSync(CurrentBuffer,DesiredBuffer,grid));
+        SpawnNewPiece();
+        difficulty = new Thread(new Difficulty());
+        difficulty.start();
         simulator = new Thread(new Simulate());
         simulator.start();
         syncer = new Thread(new BuffersSync());
@@ -170,42 +177,44 @@ public class GameplayScene extends Scene {
     enum Contents {
         EMPTY, BLUE, STATIC
     }
-    Contents[][] OldBuffer= new Contents[grid_width][grid_height], IntermediateBuffer= new Contents[grid_width][grid_height];
-    private void simulate(boolean movedown){
+    private void movedown(){
+        boolean[][] matrix = new boolean[4][4];
+            int piecey_new = piecey + 1;
+            for (int i = 0; i < 4; i++)
+                for (int j = 0; j < 4; j++) {
+                    if ((piecex + i >= grid_width)||(piecex+i<0)) {
+                        matrix[i][j] = true;
+                        continue;
+                    }
+                    if ((piecey_new + j >= grid_height)||(piecey_new+j<0)) {
+                        matrix[i][j] = true;
+                        continue;
+                    }
+                    matrix[i][j] = (DesiredBuffer[piecex + i][piecey_new + j] == Contents.STATIC);
+                }
+            if (!piece.checkThisPosition(matrix)) {
+                matrix = piece.getCurrentPosition();
+                for (int i = 0; i < 4; i++)
+                    for (int j = 0; j < 4; j++) {
+                        if (matrix[i][j]) DesiredBuffer[piecex + i][piecey + j] = Contents.STATIC;
+                    }
+                SpawnNewPiece();
+            } else {
+                piecey = piecey_new;
+            }
+        }
+
+
+    private void redraw(){
+        Contents[][] OldBuffer= new Contents[grid_width][grid_height], IntermediateBuffer= new Contents[grid_width][grid_height];
         for (int i = 0; i < grid.width; i++) {
             for (int j = 0; j < grid.height; j++) {
                 OldBuffer[i][j] = DesiredBuffer[i][j];
-                DesiredBuffer[i][j] = Contents.EMPTY;
                 IntermediateBuffer[i][j] = (OldBuffer[i][j]==Contents.STATIC)?Contents.STATIC:Contents.EMPTY;
             }
         }
         if(piece!=null) {
-            boolean[][] matrix = new boolean[4][4];
-            if(movedown) {
-                int piecey_new = piecey + 1;
-                for (int i = 0; i < 4; i++)
-                    for (int j = 0; j < 4; j++) {
-                        if ((piecex + i >= grid_width)||(piecex+i<0)) {
-                            matrix[i][j] = true;
-                            continue;
-                        }
-                        if ((piecey_new + j >= grid_height)||(piecey_new+j<0)) {
-                            matrix[i][j] = true;
-                            continue;
-                        }
-                        matrix[i][j] = (IntermediateBuffer[piecex + i][piecey_new + j] == Contents.STATIC);
-                    }
-                if (!piece.checkThisPosition(matrix)) {
-                    matrix = piece.getCurrentPosition();
-                    for (int i = 0; i < 4; i++)
-                        for (int j = 0; j < 4; j++) {
-                            if (matrix[i][j]) IntermediateBuffer[piecex + i][piecey + j] = Contents.STATIC;
-                        }
-                    SpawnNewPiece();
-                } else {
-                    piecey = piecey_new;
-                }
-            }
+            boolean [][] matrix;
             matrix = piece.getCurrentPosition();
             for (int i = 0; i < 4; i++)
                 for (int j = 0; j < 4; j++) {
@@ -258,14 +267,28 @@ public class GameplayScene extends Scene {
 
 
     }
+    private class Difficulty implements Runnable{
+        @Override
+        public void run() {
+            while(true) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(8000);
+                } catch (InterruptedException e) {
+                    return;
+                }
+                if (delay > 10) delay -= 10;
+            }
+        }
+    }
     private class Simulate implements Runnable {
 
         @Override
         public void run() {
             while (true) {
-                simulate(true);
+                movedown();
+                redraw();
                 try {
-                    TimeUnit.MILLISECONDS.sleep(275);
+                    TimeUnit.MILLISECONDS.sleep(delay);
                 } catch (InterruptedException e) {
                     return;
                 }
