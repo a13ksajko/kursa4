@@ -63,11 +63,11 @@ public class GameplayScene extends Scene {
                     int piecey_new = piecey;
                     for (int i = 0; i < 4; i++)
                         for (int j = 0; j < 4; j++) {
-                            if (piecex_new + i >= grid_width) {
+                            if ((piecex_new + i >= grid_width)||(piecex_new+i<0)) {
                                 matrix[i][j] = true;
                                 continue;
                             }
-                            if (piecey_new + j >= grid_height) {
+                            if ((piecey_new + j >= grid_height)||(piecey_new+j<0)) {
                                 matrix[i][j] = true;
                                 continue;
                             }
@@ -86,11 +86,11 @@ public class GameplayScene extends Scene {
                     int piecey_new = piecey;
                     for (int i = 0; i < 4; i++)
                         for (int j = 0; j < 4; j++) {
-                            if (piecex_new + i >= grid_width) {
+                            if ((piecex_new + i >= grid_width)||(piecex_new+i<0)) {
                                 matrix[i][j] = true;
                                 continue;
                             }
-                            if (piecey_new + j >= grid_height) {
+                            if ((piecey_new + j >= grid_height)||(piecey_new+j<0)) {
                                 matrix[i][j] = true;
                                 continue;
                             }
@@ -109,11 +109,11 @@ public class GameplayScene extends Scene {
                     int piecey_new = piecey;
                     for (int i = 0; i < 4; i++)
                         for (int j = 0; j < 4; j++) {
-                            if (piecex_new + i >= grid_width) {
+                            if ((piecex_new + i >= grid_width)||(piecex_new+i<0)) {
                                 matrix[i][j] = true;
                                 continue;
                             }
-                            if (piecey_new + j >= grid_height) {
+                            if ((piecey_new + j >= grid_height)||(piecey_new+j<0)) {
                                 matrix[i][j] = true;
                                 continue;
                             }
@@ -124,6 +124,9 @@ public class GameplayScene extends Scene {
                         simulate(false);
                     }
 
+                }
+                if(event.getCode()==KeyCode.DOWN) {
+                    simulate(true);
                 }
             }
         });
@@ -182,11 +185,11 @@ public class GameplayScene extends Scene {
                 int piecey_new = piecey + 1;
                 for (int i = 0; i < 4; i++)
                     for (int j = 0; j < 4; j++) {
-                        if (piecex + i >= grid_width) {
+                        if ((piecex + i >= grid_width)||(piecex+i<0)) {
                             matrix[i][j] = true;
                             continue;
                         }
-                        if (piecey_new + j >= grid_height) {
+                        if ((piecey_new + j >= grid_height)||(piecey_new+j<0)) {
                             matrix[i][j] = true;
                             continue;
                         }
@@ -262,7 +265,7 @@ public class GameplayScene extends Scene {
             while (true) {
                 simulate(true);
                 try {
-                    TimeUnit.MILLISECONDS.sleep(100);
+                    TimeUnit.MILLISECONDS.sleep(275);
                 } catch (InterruptedException e) {
                     return;
                 }
