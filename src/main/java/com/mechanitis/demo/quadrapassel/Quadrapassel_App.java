@@ -22,7 +22,6 @@ public class Quadrapassel_App extends Application {
         stage.setScene(gameplayScene);
         stage.setResizable(false);
         stage.show();
-        gameplayScene.Run();
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
