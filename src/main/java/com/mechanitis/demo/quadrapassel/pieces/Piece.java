@@ -1,8 +1,8 @@
 package com.mechanitis.demo.quadrapassel.pieces;
 
 public abstract class Piece {
-    int npositions;
-    int current_position;
+    int npositions; //кол-во возможных позиций
+    int current_position; //текущая позиция
     protected class Position{
         boolean[][] matrix;
         protected Position(){

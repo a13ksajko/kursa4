@@ -172,7 +172,6 @@ public class QuadrapasselGrid extends GridPane {
                 }
             if (piece.checkNextPosition(matrix)) {
                 piece.NextPosition();
-                redraw();
             }
         }
         if(move==Movement.RIGHT){
@@ -193,8 +192,6 @@ public class QuadrapasselGrid extends GridPane {
                 }
             if (piece.checkThisPosition(matrix)) {
                 piecex=piecex_new;
-                piecey=piecey_new;
-                redraw();
             }
 
         }
@@ -216,19 +213,17 @@ public class QuadrapasselGrid extends GridPane {
                 }
             if (piece.checkThisPosition(matrix)) {
                 piecex=piecex_new;
-                piecey=piecey_new;
-                redraw();
             }
 
         }
         redraw();
     }
     private void redraw(){
-        Contents[][] OldBuffer= new Contents[width][height], IntermediateBuffer= new Contents[width][height];
+        Contents[][]  IntermediateBuffer= new Contents[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                OldBuffer[i][j] = DesiredBuffer[i][j];
-                IntermediateBuffer[i][j] = (OldBuffer[i][j]== Contents.STATIC)? Contents.STATIC: Contents.EMPTY;
+
+                IntermediateBuffer[i][j] = (DesiredBuffer[i][j]== Contents.STATIC)? Contents.STATIC: Contents.EMPTY;
             }
         }
         if(piece!=null) {
@@ -243,7 +238,7 @@ public class QuadrapasselGrid extends GridPane {
         }
 
         boolean fullline=true;
-        int linesremoved=0;
+        int linesremoved=0; //для подсчёта очков
         for (int j = 0; j < height; j++) {
             fullline=true;
             for (int i = 0; i < width; i++) {
