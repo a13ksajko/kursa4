@@ -1,6 +1,7 @@
 package com.mechanitis.demo.quadrapassel;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -48,13 +49,19 @@ public class Quadrapassel_App extends Application {
                 return;
             }
                 gameplayScene = new GameplayScene(new AnchorPane(), 500, 700, socket);
-            stage.setScene(gameplayScene);
-            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            Platform.runLater(new Runnable() {
                 @Override
-                public void handle(WindowEvent event) {
-                    gameplayScene.Die();
+                public void run() {
+                    stage.setScene(gameplayScene);
+                    stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                        @Override
+                        public void handle(WindowEvent event) {
+                            gameplayScene.Die();
+                        }
+                    });
                 }
             });
+
         }
     }
     GameplayScene gameplayScene;
