@@ -118,9 +118,9 @@ public class Quadrapassel_App extends Application {
             return;
         }
     }
-    public void ServerMode(int port){
+    public void ServerMode(String hostname, int port){
         try {
-            serverSocket = new ServerSocket(port, 0, InetAddress.getByName(null));
+            serverSocket = new ServerSocket(port, 0, InetAddress.getByName(hostname));
         } catch (IOException e) {
             return;
         }

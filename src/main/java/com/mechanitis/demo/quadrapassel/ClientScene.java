@@ -9,8 +9,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 public class ClientScene extends Scene {
-    TextField ServerHostnameDesc = new TextField();
     TextField ServerPortDesc = new TextField();
+    TextField ServerHostnameDesc = new TextField();
     TextField ServerHostname = new TextField();
     TextField ServerPort = new TextField();
     Button connect = new Button();
