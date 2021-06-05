@@ -19,24 +19,35 @@ import java.util.concurrent.TimeUnit;
 
 public class GameplayScene extends Scene {
     QuadrapasselGrid grid = null;
+    FuturePieceGrid fpgrid = null;
     int grid_height = 20;
     int grid_width = 14;
     public GameplayScene(Parent root, double width, double height) {
         super(root, width, height);
         AnchorPane rootpane = (AnchorPane) root;
         this.fillProperty().setValue(Color.gray(0.2));
-        grid = new QuadrapasselGrid(grid_width, grid_height);
+        fpgrid = new FuturePieceGrid();
+        fpgrid.setHgap(5);
+        fpgrid.setVgap(5);
+        fpgrid.setAlignment(Pos.CENTER);
+        grid = new QuadrapasselGrid(grid_width, grid_height,fpgrid);
         grid.setHgap(5);
         grid.setVgap(5);
         grid.setAlignment(Pos.CENTER);
         AnchorPane.setTopAnchor(grid, 10.0);
         AnchorPane.setLeftAnchor(grid, 10.0);
-        AnchorPane.setRightAnchor(grid, 10.0);
         AnchorPane.setBottomAnchor(grid, 10.0);
         rootpane.getChildren().add(grid);
+        AnchorPane.setTopAnchor(fpgrid, 10.0);
+        AnchorPane.setRightAnchor(fpgrid, 10.0);
+        rootpane.getChildren().add(fpgrid);
         this.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
+                if(event.getCode()==KeyCode.SPACE){
+                    grid.queueMove(QuadrapasselGrid.Movement.FUN);
+
+                }
 
                 if(event.getCode()==KeyCode.LEFT){
                     grid.queueMove(QuadrapasselGrid.Movement.LEFT);
