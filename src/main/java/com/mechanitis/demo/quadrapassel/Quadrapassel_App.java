@@ -47,11 +47,14 @@ public class Quadrapassel_App extends Application {
             } catch (IOException e) {
                 return;
             }
-            try {
-                out.println(Integer.decode(in.readLine())+1);
-            } catch (IOException e) {
-                return;
-            }
+                gameplayScene = new GameplayScene(new AnchorPane(), 500, 700, socket);
+            stage.setScene(gameplayScene);
+            stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    gameplayScene.Die();
+                }
+            });
         }
     }
     GameplayScene gameplayScene;
@@ -68,17 +71,11 @@ public class Quadrapassel_App extends Application {
     @Override
     public void start(Stage stage) {
         this.stage=stage;
-        gameplayScene = new GameplayScene(new AnchorPane(), 500, 700);
         clientServerChoiceScene = new ClientServerChoiceScene(new VBox(),this);
         stage.setScene(clientServerChoiceScene);
         stage.setResizable(false);
         stage.show();
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                gameplayScene.Die();
-            }
-        });
+
     }
     public void ClientInit(){
         clientScene= new ClientScene(new VBox(),this);
@@ -111,12 +108,14 @@ public class Quadrapassel_App extends Application {
             return;
         }
         mode=Mode.CLIENT;
-        out.println(3);
-        try {
-            System.out.println(in.readLine());
-        } catch (IOException e) {
-            return;
-        }
+        gameplayScene = new GameplayScene(new AnchorPane(), 500, 700, socket);
+        stage.setScene(gameplayScene);
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                gameplayScene.Die();
+            }
+        });
     }
     public void ServerMode(int port){
         try {

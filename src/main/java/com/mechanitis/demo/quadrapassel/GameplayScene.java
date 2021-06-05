@@ -14,6 +14,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -22,15 +27,50 @@ public class GameplayScene extends Scene {
     FuturePieceGrid fpgrid = null;
     int grid_height = 20;
     int grid_width = 14;
-    public GameplayScene(Parent root, double width, double height) {
+    Socket socket;
+
+    class FunReceiver implements Runnable{
+        BufferedReader in;
+
+        @Override
+        public void run() {
+            try {
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            while(true){
+                try {
+
+                    if(in.readLine().equals("Fun")){
+                        grid.queueMove(QuadrapasselGrid.Movement.FUN);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    PrintWriter out;
+
+    public void SendFun(){
+        out.println("Fun");
+    }
+    public GameplayScene(Parent root, double width, double height, Socket socket) {
         super(root, width, height);
+        this.socket=socket;
+        try {
+            out = new PrintWriter(socket.getOutputStream(), true);
+        } catch (IOException e) {
+            return;
+        }
         AnchorPane rootpane = (AnchorPane) root;
         this.fillProperty().setValue(Color.gray(0.2));
         fpgrid = new FuturePieceGrid();
         fpgrid.setHgap(5);
         fpgrid.setVgap(5);
         fpgrid.setAlignment(Pos.CENTER);
-        grid = new QuadrapasselGrid(grid_width, grid_height,fpgrid);
+        grid = new QuadrapasselGrid(grid_width, grid_height,fpgrid, this);
         grid.setHgap(5);
         grid.setVgap(5);
         grid.setAlignment(Pos.CENTER);
@@ -41,6 +81,8 @@ public class GameplayScene extends Scene {
         AnchorPane.setTopAnchor(fpgrid, 10.0);
         AnchorPane.setRightAnchor(fpgrid, 10.0);
         rootpane.getChildren().add(fpgrid);
+        Thread funthread = new Thread(new FunReceiver());
+        funthread.start();
         this.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {

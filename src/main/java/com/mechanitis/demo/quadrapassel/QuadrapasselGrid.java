@@ -26,8 +26,10 @@ public class QuadrapasselGrid extends GridPane {
     Random r = new Random();
     private Queue<Movement> queue;
     FuturePieceGrid fpgrid;
-    public QuadrapasselGrid(Integer width, Integer height, FuturePieceGrid fpgrid) {
+    GameplayScene scene;
+    public QuadrapasselGrid(Integer width, Integer height, FuturePieceGrid fpgrid, GameplayScene gameplayScene) {
         super();
+        this.scene=gameplayScene;
         this.height = height;
         this.width = width;
         this.fpgrid=fpgrid;
@@ -208,6 +210,7 @@ public class QuadrapasselGrid extends GridPane {
                     if (IntermediateBuffer[i][j] == Contents.EMPTY) fullline = false;
                 }
                 if (fullline) {
+                    scene.SendFun();
                     for (int k = j - 1; k >= 0; k--) {
                         for (int i = 0; i < width; i++) {
                             IntermediateBuffer[i][k + 1] = IntermediateBuffer[i][k];
