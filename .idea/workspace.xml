@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d17ac18b-fe26-48af-aead-1758a523d1ca" name="Default Changelist" comment="Dynamic difficulty">
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations/kursa4__build_.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/ClientScene.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/ClientServerChoiceScene.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/FuturePieceGrid.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/ServerScene.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/WaitingForClientsScene.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/GameplayScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/GameplayScene.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/QuadrapasselGrid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/QuadrapasselGrid.java" afterDir="false" />
+    <list default="true" id="d17ac18b-fe26-48af-aead-1758a523d1ca" name="Default Changelist" comment="Socket stuff">
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/Quadrapassel_App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/Quadrapassel_App.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -151,7 +141,14 @@
       <option name="project" value="LOCAL" />
       <updated>1618478910694</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Revert &quot;Other socket stuff&quot;&#10;&#10;This reverts commit 2af6e068">
+      <created>1622894363201</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1622894363201</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -171,6 +168,7 @@
     <MESSAGE value="It works" />
     <MESSAGE value="Fix" />
     <MESSAGE value="Dynamic difficulty" />
-    <option name="LAST_COMMIT_MESSAGE" value="Dynamic difficulty" />
+    <MESSAGE value="Revert &quot;Other socket stuff&quot;&#10;&#10;This reverts commit 2af6e068" />
+    <option name="LAST_COMMIT_MESSAGE" value="Revert &quot;Other socket stuff&quot;&#10;&#10;This reverts commit 2af6e068" />
   </component>
 </project>
