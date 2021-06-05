@@ -84,6 +84,7 @@ public class QuadrapasselGrid extends GridPane {
 
     private void processQueue() {
         if (piece == null) return;
+        if(queue.isEmpty())return;
         Movement move = queue.remove();
         if(move==Movement.FUN){
             Fun();
