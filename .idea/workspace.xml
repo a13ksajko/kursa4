@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d17ac18b-fe26-48af-aead-1758a523d1ca" name="Default Changelist" comment="Sockets fixed (for now)">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/GameplayScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/GameplayScene.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/QuadrapasselGrid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/QuadrapasselGrid.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/Quadrapassel_App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/Quadrapassel_App.java" afterDir="false" />
-    </list>
+    <list default="true" id="d17ac18b-fe26-48af-aead-1758a523d1ca" name="Default Changelist" comment="test" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -157,7 +153,21 @@
       <option name="project" value="LOCAL" />
       <updated>1622894463870</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="test">
+      <created>1622895348314</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1622895348314</updated>
+    </task>
+    <task id="LOCAL-00009" summary="test">
+      <created>1622895631899</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1622895631899</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -189,6 +199,7 @@
     <MESSAGE value="Dynamic difficulty" />
     <MESSAGE value="Revert &quot;Other socket stuff&quot;&#10;&#10;This reverts commit 2af6e068" />
     <MESSAGE value="Sockets fixed (for now)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Sockets fixed (for now)" />
+    <MESSAGE value="test" />
+    <option name="LAST_COMMIT_MESSAGE" value="test" />
   </component>
 </project>
