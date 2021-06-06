@@ -65,8 +65,6 @@ public class GameplayScene extends Scene {
             return;
         }
         AnchorPane rootpane = (AnchorPane) root;
-        rootpane.setMinWidth(width);
-        rootpane.setMinHeight(height);
         this.fillProperty().setValue(Color.gray(0.2));
         fpgrid = new FuturePieceGrid();
         fpgrid.setHgap(5);

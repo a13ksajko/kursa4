@@ -52,7 +52,10 @@ public class Quadrapassel_App extends Application {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
+                    stage.close();
                     stage.setScene(gameplayScene);
+                    stage.sizeToScene();
+                    stage.show();
                     stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                         @Override
                         public void handle(WindowEvent event) {
@@ -79,18 +82,25 @@ public class Quadrapassel_App extends Application {
     public void start(Stage stage) {
         this.stage=stage;
         clientServerChoiceScene = new ClientServerChoiceScene(new VBox(),this);
+        stage.close();
         stage.setScene(clientServerChoiceScene);
         stage.setResizable(false);
+        stage.sizeToScene();
         stage.show();
-
     }
     public void ClientInit(){
         clientScene= new ClientScene(new VBox(),this);
+        stage.close();
         stage.setScene(clientScene);
+        stage.sizeToScene();
+        stage.show();
     }
     public void ServerInit(){
         serverScene= new ServerScene(new VBox(),this);
+        stage.close();
         stage.setScene(serverScene);
+        stage.sizeToScene();
+        stage.show();
     }
     public void ClientMode(String hostname, int port){
         try {
@@ -116,13 +126,16 @@ public class Quadrapassel_App extends Application {
         }
         mode=Mode.CLIENT;
         gameplayScene = new GameplayScene(new AnchorPane(), 500, 700, socket);
+        stage.close();
         stage.setScene(gameplayScene);
+        stage.sizeToScene();
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
                 gameplayScene.Die();
             }
         });
+        stage.show();
     }
     public void ServerMode(int port){
         try {
@@ -132,7 +145,9 @@ public class Quadrapassel_App extends Application {
         }
         mode=Mode.SERVER;
         waitingForClientsScene= new WaitingForClientsScene(new VBox(),this);
+        stage.close();
         stage.setScene(waitingForClientsScene);
+        stage.show();
         Thread waitforclient = new Thread(new WaitForClient());
         waitforclient.start();
     }
