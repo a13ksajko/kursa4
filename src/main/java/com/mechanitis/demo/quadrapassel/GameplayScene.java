@@ -7,6 +7,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -40,10 +43,11 @@ public class GameplayScene extends Scene {
             }
             while(true){
                 try {
-
-                    if(in.readLine().equals("Fun")){
+                    String line=in.readLine();
+                    if(line.equals("Fun")){
                         grid.queueMove(QuadrapasselGrid.Movement.FUN);
                     }
+                    if(line.equals("Win"))Win();
                 } catch (IOException e) {
                     return;
                 }
@@ -51,13 +55,45 @@ public class GameplayScene extends Scene {
         }
     }
     PrintWriter out;
+    public void Win(){
+        Die();
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("You Won!");
+        ButtonType buttonType1 = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().add(buttonType1);
+        dialog.showAndWait();
+        try {
+            app.stop();
+        } catch (Exception e) {
+            return;
+        }
+    }
+    public void Lose(){
+        SendWin();
+        Die();
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("You Lost!");
+        ButtonType buttonType1 = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().add(buttonType1);
+        dialog.showAndWait();
+        try {
+            app.stop();
+        } catch (Exception e) {
+            return;
+        }
 
+    }
     public void SendFun(){
         out.println("Fun");
     }
-    public GameplayScene(Parent root, double width, double height, Socket socket) {
+    public void SendWin(){
+        out.println("Win");
+    }
+    Quadrapassel_App app;
+    public GameplayScene(Parent root, double width, double height, Socket socket, Quadrapassel_App app) {
         super(root, width, height);
         this.socket=socket;
+        this.app=app;
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException e) {

@@ -280,7 +280,7 @@ public class QuadrapasselGrid extends GridPane {
                 }
                 matrix[i][j] = (DesiredBuffer[piecex_new + i][piecey_new + j] == Contents.STATIC);
             }
-        if (!piece.checkThisPosition(matrix)) Die();
+        if (!piece.checkThisPosition(matrix)) {Die(); scene.Lose();}
     }
 
     public void Die() {
@@ -332,6 +332,7 @@ public class QuadrapasselGrid extends GridPane {
                 }
                 if (delay > 200) delay -= 10;
                 else if(chance<100)chance+=5;
+                else if (delay > 100) delay -= 10;
             }
         }
     }

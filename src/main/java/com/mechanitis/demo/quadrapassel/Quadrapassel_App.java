@@ -31,7 +31,10 @@ public class Quadrapassel_App extends Application {
         SERVER,CLIENT
     }
     class WaitForClient implements Runnable{
-
+        Quadrapassel_App app;
+        public WaitForClient(Quadrapassel_App app){
+            this.app=app;
+        }
         @Override
         public void run() {
             try {
@@ -49,7 +52,7 @@ public class Quadrapassel_App extends Application {
             } catch (IOException e) {
                 return;
             }
-                gameplayScene = new GameplayScene(new AnchorPane(), 500, 700, socket);
+                gameplayScene = new GameplayScene(new AnchorPane(), 500, 700, socket,app);
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
@@ -127,7 +130,7 @@ public class Quadrapassel_App extends Application {
             return;
         }
         mode=Mode.CLIENT;
-        gameplayScene = new GameplayScene(new AnchorPane(), 500, 700, socket);
+        gameplayScene = new GameplayScene(new AnchorPane(), 500, 700, socket,this);
         stage.close();
         stage.setScene(gameplayScene);
         stage.sizeToScene();
@@ -150,7 +153,7 @@ public class Quadrapassel_App extends Application {
         stage.close();
         stage.setScene(waitingForClientsScene);
         stage.show();
-        Thread waitforclient = new Thread(new WaitForClient());
+        Thread waitforclient = new Thread(new WaitForClient(this));
         waitforclient.start();
     }
     public static void main(String[] args) {
