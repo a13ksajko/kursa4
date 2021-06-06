@@ -1,5 +1,6 @@
 plugins {
     id 'application'
+    id "com.github.langmo.gradlensis" version "0.1.0"
 }
 
 group 'com.mechanitis'
@@ -7,6 +8,17 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+}
+nsis {
+    // Enter here the configuration settings of the gradle-nsis plugin.
+    // Note: a task "createInstaller" is automatically generated.
+
+    // path to the NSIS configuration file
+    configuration = file("${rootProject.projectDir}/installer_configuration.nsi")
+
+    // folder where the NSIS installer generator is run. All paths
+    // in the NSIS configuration file are relative to this folder.
+    runIn =  file("${rootProject.projectDir}")
 }
 
 def javaFXPlatform = getJavaFXPlatform()

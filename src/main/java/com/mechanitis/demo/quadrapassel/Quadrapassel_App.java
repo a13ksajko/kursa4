@@ -42,17 +42,7 @@ public class Quadrapassel_App extends Application {
             } catch (IOException e) {
                 return;
             }
-            try {
-                out = new PrintWriter(socket.getOutputStream(), true);
-            } catch (IOException e) {
-                return;
-            }
-            try {
-                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            } catch (IOException e) {
-                return;
-            }
-                gameplayScene = new GameplayScene(new AnchorPane(), 500, 700, socket,app);
+               gameplayScene = new GameplayScene(new AnchorPane(), 500, 700, socket,app);
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
@@ -79,8 +69,6 @@ public class Quadrapassel_App extends Application {
     Stage stage;
     ServerSocket serverSocket;
     Socket socket=null;
-    PrintWriter out;
-    BufferedReader in;
     Mode mode;
     @Override
     public void start(Stage stage) {
@@ -117,17 +105,6 @@ public class Quadrapassel_App extends Application {
             } catch (UnknownHostException unknownHostException) {
                 return;
             }
-            return;
-        }
-
-        try {
-             out = new PrintWriter(socket.getOutputStream(), true);
-        } catch (IOException e) {
-            return;
-        }
-        try {
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        } catch (IOException e) {
             return;
         }
         }
