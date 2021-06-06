@@ -156,6 +156,14 @@ public class Quadrapassel_App extends Application {
         Thread waitforclient = new Thread(new WaitForClient(this));
         waitforclient.start();
     }
+    public void Die(){
+        stage.close();
+        try {
+            stop();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public static void main(String[] args) {
         launch();
     }

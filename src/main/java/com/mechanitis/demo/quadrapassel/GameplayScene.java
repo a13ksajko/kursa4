@@ -65,11 +65,7 @@ public class GameplayScene extends Scene {
                 ButtonType buttonType1 = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
                 dialog.getDialogPane().getButtonTypes().add(buttonType1);
                 dialog.showAndWait();
-                try {
-                    app.stop();
-                } catch (Exception e) {
-                    return;
-                }
+                app.Die();
             }
         });
 
@@ -85,11 +81,7 @@ public class GameplayScene extends Scene {
                 ButtonType buttonType1 = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
                 dialog.getDialogPane().getButtonTypes().add(buttonType1);
                 dialog.showAndWait();
-                try {
-                    app.stop();
-                } catch (Exception e) {
-                    return;
-                }
+                app.Die();
             }
         });
 
