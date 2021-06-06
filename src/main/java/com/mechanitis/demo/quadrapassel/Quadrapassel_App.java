@@ -78,7 +78,7 @@ public class Quadrapassel_App extends Application {
     WaitingForClientsScene waitingForClientsScene;
     Stage stage;
     ServerSocket serverSocket;
-    Socket socket;
+    Socket socket=null;
     PrintWriter out;
     BufferedReader in;
     Mode mode;
@@ -108,6 +108,7 @@ public class Quadrapassel_App extends Application {
         stage.show();
     }
     public void ClientMode(String hostname, int port){
+        if(port!=0){
         try {
             socket = new Socket(InetAddress.getByName(hostname),port);
         } catch (IOException e) {
@@ -128,6 +129,7 @@ public class Quadrapassel_App extends Application {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
             return;
+        }
         }
         mode=Mode.CLIENT;
         gameplayScene = new GameplayScene(new AnchorPane(), 500, 700, socket,this);

@@ -34,6 +34,7 @@ public class GameplayScene extends Scene {
         BufferedReader in;
         @Override
         public void run() {
+            if(socket==null)return;
             try {
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             } catch (IOException e) {
@@ -89,9 +90,11 @@ public class GameplayScene extends Scene {
 
     }
     public void SendFun(){
+        if(out!=null)
         out.println("Fun");
     }
     public void SendWin(){
+        if(out!=null)
         out.println("Win");
     }
     Random r =new Random();
@@ -104,6 +107,7 @@ public class GameplayScene extends Scene {
         super(root, width, height);
         this.socket=socket;
         this.app=app;
+        if(socket!=null)
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException e) {
@@ -121,6 +125,8 @@ public class GameplayScene extends Scene {
         grid.setAlignment(Pos.CENTER);
         scoretf = new TextField();
         scoretf.setText("Score: 0");
+        scoretf.setEditable(false);
+        scoretf.setDisable(true);
         AnchorPane.setTopAnchor(grid, 10.0);
         AnchorPane.setLeftAnchor(grid, 10.0);
         AnchorPane.setBottomAnchor(grid, 10.0);

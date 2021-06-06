@@ -334,7 +334,7 @@ public class QuadrapasselGrid extends GridPane {
                 }
                 if (delay > 200) delay -= 10;
                 else if(chance<100)chance+=5;
-                else if (delay > 100) delay -= 10;
+                else if (delay > 0) delay -= 10;
             }
         }
     }
