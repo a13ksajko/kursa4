@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 import java.io.BufferedReader;
@@ -80,6 +81,7 @@ public class Quadrapassel_App extends Application {
     Mode mode;
     @Override
     public void start(Stage stage) {
+        stage.initStyle(StageStyle.DECORATED);
         this.stage=stage;
         clientServerChoiceScene = new ClientServerChoiceScene(new VBox(),this);
         stage.close();

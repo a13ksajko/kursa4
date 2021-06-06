@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class QuadrapasselGrid extends GridPane {
     final Thread queueProcessor;
     final Thread simulator;
+    final Thread difficultyThread;
     public Integer width, height;
     Object lock = new Object();
     Contents[][] CurrentBuffer;
@@ -27,6 +28,7 @@ public class QuadrapasselGrid extends GridPane {
     private Queue<Movement> queue;
     FuturePieceGrid fpgrid;
     GameplayScene scene;
+    int chance=30;
     public QuadrapasselGrid(Integer width, Integer height, FuturePieceGrid fpgrid, GameplayScene gameplayScene) {
         super();
         this.scene=gameplayScene;
@@ -52,6 +54,8 @@ public class QuadrapasselGrid extends GridPane {
         queueProcessor.start();
         simulator = new Thread(new Simulator());
         simulator.start();
+        difficultyThread= new Thread(new Difficulty());
+        difficultyThread.start();
     }
 
     public static Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
@@ -211,7 +215,8 @@ public class QuadrapasselGrid extends GridPane {
                     if (IntermediateBuffer[i][j] == Contents.EMPTY) fullline = false;
                 }
                 if (fullline) {
-                    scene.SendFun();
+                    if(r.nextInt(100)<=chance)
+                        scene.SendFun();
                     for (int k = j - 1; k >= 0; k--) {
                         for (int i = 0; i < width; i++) {
                             IntermediateBuffer[i][k + 1] = IntermediateBuffer[i][k];
@@ -325,7 +330,8 @@ public class QuadrapasselGrid extends GridPane {
                 } catch (InterruptedException e) {
                     return;
                 }
-                if (delay > 10) delay -= 10;
+                if (delay > 200) delay -= 10;
+                else if(chance<100)chance+=5;
             }
         }
     }

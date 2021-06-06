@@ -28,10 +28,9 @@ public class GameplayScene extends Scene {
     int grid_height = 20;
     int grid_width = 14;
     Socket socket;
-
+    Thread funthread;
     class FunReceiver implements Runnable{
         BufferedReader in;
-
         @Override
         public void run() {
             try {
@@ -46,7 +45,7 @@ public class GameplayScene extends Scene {
                         grid.queueMove(QuadrapasselGrid.Movement.FUN);
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    return;
                 }
             }
         }
@@ -81,7 +80,7 @@ public class GameplayScene extends Scene {
         AnchorPane.setTopAnchor(fpgrid, 10.0);
         AnchorPane.setRightAnchor(fpgrid, 10.0);
         rootpane.getChildren().add(fpgrid);
-        Thread funthread = new Thread(new FunReceiver());
+        funthread = new Thread(new FunReceiver());
         funthread.start();
         this.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -93,7 +92,7 @@ public class GameplayScene extends Scene {
 
                 if(event.getCode()==KeyCode.LEFT){
                     grid.queueMove(QuadrapasselGrid.Movement.LEFT);
-
+Random r = new Random();
                 }
                 if(event.getCode()==KeyCode.RIGHT){
                     grid.queueMove(QuadrapasselGrid.Movement.RIGHT);
