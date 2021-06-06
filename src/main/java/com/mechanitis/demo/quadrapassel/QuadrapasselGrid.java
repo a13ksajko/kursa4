@@ -286,6 +286,7 @@ public class QuadrapasselGrid extends GridPane {
     public void Die() {
         queueProcessor.interrupt();
         simulator.interrupt();
+        difficultyThread.interrupt();
     }
 
     public enum Movement {
