@@ -215,6 +215,7 @@ public class QuadrapasselGrid extends GridPane {
                     if (IntermediateBuffer[i][j] == Contents.EMPTY) fullline = false;
                 }
                 if (fullline) {
+                    scene.UpScore();
                     if(r.nextInt(100)<=chance)
                         scene.SendFun();
                     for (int k = j - 1; k >= 0; k--) {

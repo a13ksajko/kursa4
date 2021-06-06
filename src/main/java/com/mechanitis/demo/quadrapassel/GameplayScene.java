@@ -1,21 +1,18 @@
 package com.mechanitis.demo.quadrapassel;
 
-import com.mechanitis.demo.quadrapassel.pieces.*;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,7 +20,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 public class GameplayScene extends Scene {
     QuadrapasselGrid grid = null;
@@ -31,6 +27,8 @@ public class GameplayScene extends Scene {
     int grid_height = 20;
     int grid_width = 14;
     Socket socket;
+    int score=0;
+    TextField scoretf;
     Thread funthread;
     class FunReceiver implements Runnable{
         BufferedReader in;
@@ -63,6 +61,7 @@ public class GameplayScene extends Scene {
             public void run() {
                 Dialog<String> dialog = new Dialog<>();
                 dialog.setTitle("You Won!");
+                dialog.setContentText("Score: "+score);
                 ButtonType buttonType1 = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
                 dialog.getDialogPane().getButtonTypes().add(buttonType1);
                 dialog.showAndWait();
@@ -79,6 +78,7 @@ public class GameplayScene extends Scene {
             public void run() {
                 Dialog<String> dialog = new Dialog<>();
                 dialog.setTitle("You Lost!");
+                dialog.setContentText("Score: "+score);
                 ButtonType buttonType1 = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
                 dialog.getDialogPane().getButtonTypes().add(buttonType1);
                 dialog.showAndWait();
@@ -93,6 +93,11 @@ public class GameplayScene extends Scene {
     }
     public void SendWin(){
         out.println("Win");
+    }
+    Random r =new Random();
+    public void UpScore(){
+        score+=r.nextInt(15);
+        scoretf.setText("Score: "+ new Integer(score));
     }
     Quadrapassel_App app;
     public GameplayScene(Parent root, double width, double height, Socket socket, Quadrapassel_App app) {
@@ -114,13 +119,18 @@ public class GameplayScene extends Scene {
         grid.setHgap(5);
         grid.setVgap(5);
         grid.setAlignment(Pos.CENTER);
+        scoretf = new TextField();
+        scoretf.setText("Score: 0");
         AnchorPane.setTopAnchor(grid, 10.0);
         AnchorPane.setLeftAnchor(grid, 10.0);
         AnchorPane.setBottomAnchor(grid, 10.0);
         rootpane.getChildren().add(grid);
-        AnchorPane.setTopAnchor(fpgrid, 10.0);
+        AnchorPane.setTopAnchor(fpgrid, 40.0);
         AnchorPane.setRightAnchor(fpgrid, 10.0);
         rootpane.getChildren().add(fpgrid);
+        AnchorPane.setTopAnchor(scoretf, 10.0);
+        AnchorPane.setRightAnchor(scoretf, 10.0);
+        rootpane.getChildren().add(scoretf);
         funthread = new Thread(new FunReceiver());
         funthread.start();
         this.setOnKeyPressed(new EventHandler<KeyEvent>() {
