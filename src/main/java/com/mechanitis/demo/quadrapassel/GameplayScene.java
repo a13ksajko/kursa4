@@ -57,30 +57,42 @@ public class GameplayScene extends Scene {
     PrintWriter out;
     public void Win(){
         Die();
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("You Won!");
-        ButtonType buttonType1 = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().add(buttonType1);
-        dialog.showAndWait();
-        try {
-            app.stop();
-        } catch (Exception e) {
-            return;
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Dialog<String> dialog = new Dialog<>();
+                dialog.setTitle("You Won!");
+                ButtonType buttonType1 = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+                dialog.getDialogPane().getButtonTypes().add(buttonType1);
+                dialog.showAndWait();
+                try {
+                    app.stop();
+                } catch (Exception e) {
+                    return;
+                }
+            }
+        });
+
     }
     public void Lose(){
         SendWin();
         Die();
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("You Lost!");
-        ButtonType buttonType1 = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().add(buttonType1);
-        dialog.showAndWait();
-        try {
-            app.stop();
-        } catch (Exception e) {
-            return;
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Dialog<String> dialog = new Dialog<>();
+                dialog.setTitle("You Lost!");
+                ButtonType buttonType1 = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+                dialog.getDialogPane().getButtonTypes().add(buttonType1);
+                dialog.showAndWait();
+                try {
+                    app.stop();
+                } catch (Exception e) {
+                    return;
+                }
+            }
+        });
+
 
     }
     public void SendFun(){
