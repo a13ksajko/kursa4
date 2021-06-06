@@ -44,6 +44,7 @@ public class GameplayScene extends Scene {
             while(true){
                 try {
                     String line=in.readLine();
+                    if(line==null)return;
                     if(line.equals("Fun")){
                         grid.queueMove(QuadrapasselGrid.Movement.FUN);
                     }

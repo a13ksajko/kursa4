@@ -159,9 +159,14 @@ public class Quadrapassel_App extends Application {
     public void Die(){
         stage.close();
         try {
+            socket.close();
+        } catch (IOException e) {
+            return;
+        }
+        try {
             stop();
         } catch (Exception e) {
-            e.printStackTrace();
+            return;
         }
     }
     public static void main(String[] args) {
