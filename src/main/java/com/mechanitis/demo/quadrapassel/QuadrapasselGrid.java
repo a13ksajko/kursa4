@@ -13,29 +13,29 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class QuadrapasselGrid extends GridPane {
-    final Thread queueProcessor;
-    final Thread simulator;
-    final Thread difficultyThread;
-    public Integer width, height;
-    Object lock = new Object();
-    Contents[][] CurrentBuffer;
-    int delay = 350;
-    Piece piece = null;
-    int piecex = 0;
+    final Thread queueProcessor;    //поток-обработчик очереди инструкций
+    final Thread simulator;         //поток сдвига детали вниз (с определённым дилеем)
+    final Thread difficultyThread;  //поток понижающий дилей
+    public Integer width, height;   //размеры решётки
+    Object lock = new Object();     //мьютекс для очереди
+    Contents[][] CurrentBuffer;     //видимое игровое поле
+    int delay = 350;                //задержка
+    Piece piece = null;             //активная (падающая) фигура
+    int piecex = 0;                 //координаты левой верхней точки фигуры
     int piecey = 0;
-    Contents[][] DesiredBuffer;
-    Random r = new Random();
-    private Queue<Movement> queue;
-    FuturePieceGrid fpgrid;
+    Contents[][] DesiredBuffer;     //скрытый редактируемый буффер игр поля (нужен чтобы не перерисовывать всё)
+    Random r = new Random();        //ГСЧ
+    private Queue<Movement> queue;  //очередь всего
+    FuturePieceGrid fpgrid;         //ссылка на решётку следующей фигуры
     GameplayScene scene;
-    int chance=30;
+    int chance=30;                  //шанс тетрис-момента
     public QuadrapasselGrid(Integer width, Integer height, FuturePieceGrid fpgrid, GameplayScene gameplayScene) {
-        super();
-        this.scene=gameplayScene;
+        super();                    //вызываем конструктор родителя
+        this.scene=gameplayScene;   //переприсвааеваем ссылки из параметров
         this.height = height;
         this.width = width;
         this.fpgrid=fpgrid;
-        CurrentBuffer = new Contents[width][height];
+        CurrentBuffer = new Contents[width][height];    //инициализируем буфферы
         DesiredBuffer = new Contents[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -47,10 +47,10 @@ public class QuadrapasselGrid extends GridPane {
                 CurrentBuffer[i][j] = Contents.EMPTY;
                 DesiredBuffer[i][j] = Contents.EMPTY;
             }
-        }
-        queue = new LinkedList<Movement>();
-        SpawnNewPiece();
-        queueProcessor = new Thread(new QueueProcessor());
+        }                                               //конец инициализации
+        queue = new LinkedList<Movement>();             //создаём список с интерфейсом очереди
+        SpawnNewPiece();                                //генерируем новую фигуру на игровом поле
+        queueProcessor = new Thread(new QueueProcessor());  //стартуем!!
         queueProcessor.start();
         simulator = new Thread(new Simulator());
         simulator.start();
@@ -68,54 +68,53 @@ public class QuadrapasselGrid extends GridPane {
     }
 
     public static Node setNodeFromGridPane(GridPane gridPane, int col, int row, Node newnode) {
-        Node tobereplaced = null;
+        Node tobereplaced = null;       //создаём пустую ссылку для старого квадрата, который впоследствии будет заменён на новый
         for (Node node : gridPane.getChildren()) {
             if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
-                tobereplaced = node;
+                tobereplaced = node;        //находим старый нужный элемент списка и берём на него ссылку
                 break;
             }
         }
-        gridPane.getChildren().set(gridPane.getChildren().indexOf(tobereplaced), newnode);
+        gridPane.getChildren().set(gridPane.getChildren().indexOf(tobereplaced), newnode);      //заменили мать
         return null;
     }
 
-    public synchronized void queueMove(Movement move) {
-        queue.add(move);
-        synchronized (lock) {
+    public synchronized void queueMove(Movement move) {//добавить любое действие в очередь
+        queue.add(move);        //добавить действие в очередь
+        synchronized (lock) {   //потоку, ждущему на замке, выслать уведомление
             lock.notify();
         }
     }
 
     private void processQueue() {
-        if (piece == null) return;
         if(queue.isEmpty())return;
-        Movement move = queue.remove();
-        if(move==Movement.FUN){
+        Movement move = queue.remove(); //взять действие и удалить его из очереди
+        if(move==Movement.FUN){         //елси противник прокинул fun, то мы его обрабатываем
             Fun();
         }
+        if(piece == null)return;        //если акт фигуры нет, вiйди разбiйник
         if (move == Movement.DOWN) {
-
             boolean[][] matrix = new boolean[4][4];
             int piecey_new = piecey + 1;
             for (int i = 0; i < 4; i++)
                 for (int j = 0; j < 4; j++) {
-                    if ((piecex + i >= width) || (piecex + i < 0)) {
+                    if ((piecex + i >= width) || (piecex + i < 0)) {    //за гранью реальности
                         matrix[i][j] = true;
                         continue;
                     }
-                    if ((piecey_new + j >= height) || (piecey_new + j < 0)) {
+                    if ((piecey_new + j >= height) || (piecey_new + j < 0)) {   //за гранью нереальности (а похуй)
                         matrix[i][j] = true;
                         continue;
                     }
                     matrix[i][j] = (DesiredBuffer[piecex + i][piecey_new + j] == Contents.STATIC);
                 }
-            if (!piece.checkThisPosition(matrix)) {
+            if (!piece.checkThisPosition(matrix)) { //акт фигуру, которая не может упасть, делаем в статик
                 matrix = piece.getCurrentPosition();
                 for (int i = 0; i < 4; i++)
                     for (int j = 0; j < 4; j++) {
                         if (matrix[i][j]) DesiredBuffer[piecex + i][piecey + j] = Contents.STATIC;
                     }
-                piece = null;
+                piece = null;   //вызываем новую фигуру
             } else {
                 piecey = piecey_new;
             }
@@ -159,7 +158,6 @@ public class QuadrapasselGrid extends GridPane {
             if (piece.checkThisPosition(matrix)) {
                 piecex = piecex_new;
             }
-
         }
         if (move == Movement.LEFT) {
             boolean[][] matrix = new boolean[4][4];
@@ -202,11 +200,9 @@ public class QuadrapasselGrid extends GridPane {
         Contents[][] IntermediateBuffer = new Contents[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-
                 IntermediateBuffer[i][j] = (DesiredBuffer[i][j] == Contents.STATIC) ? Contents.STATIC : Contents.EMPTY;
             }
         }
-
         if (piece == null) {
             boolean fullline = true;
             for (int j = height - 1; j >= 0; j--) {
@@ -234,7 +230,6 @@ public class QuadrapasselGrid extends GridPane {
             for (int j = 0; j < 4; j++) {
                 if (matrix[i][j]) IntermediateBuffer[piecex + i][piecey + j] = Contents.BLUE;
             }
-
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 DesiredBuffer[i][j] = IntermediateBuffer[i][j];
@@ -246,12 +241,10 @@ public class QuadrapasselGrid extends GridPane {
                     Rectangle rectangle = (Rectangle) getNodeFromGridPane(this, i, j);
                     int finalI = i;
                     int finalJ = j;
-                    Platform.runLater(new Syncer(rectangle, finalI, finalJ, this));
-
+                    Platform.runLater(new Syncer(rectangle, finalI, finalJ, this, fpgrid.npiece));
                 }
             }
         }
-
     }
 
     private void SpawnNewPiece() {
@@ -283,13 +276,11 @@ public class QuadrapasselGrid extends GridPane {
             }
         if (!piece.checkThisPosition(matrix)) {Die(); scene.Lose();}
     }
-
     public void Die() {
         queueProcessor.interrupt();
         simulator.interrupt();
         difficultyThread.interrupt();
     }
-
     public enum Movement {
         LEFT,
         RIGHT,
@@ -297,32 +288,35 @@ public class QuadrapasselGrid extends GridPane {
         ROTATE,
         FUN
     }
-
     enum Contents {
         EMPTY, BLUE, STATIC
     }
-
     private class Syncer implements Runnable {
-        final Integer finalI;
-        final Integer finalJ;
+        final Integer x;
+        final Integer y;
         Rectangle rectangle;
         QuadrapasselGrid grid;
-
-        public Syncer(Rectangle rectangle, Integer finalI, Integer finalJ, QuadrapasselGrid grid) {
+        int n_piece;
+        public Syncer(Rectangle rectangle,  Integer x,  Integer y, QuadrapasselGrid grid, int n_piece) {
             this.rectangle = rectangle;
-            this.finalI = finalI;
-            this.finalJ = finalJ;
+            this.x = x;
+            this.y = y;
             this.grid = grid;
+            this.n_piece = n_piece;
         }
-
         @Override
         public void run() {
-            rectangle.setFill((DesiredBuffer[finalI][finalJ] == Contents.BLUE) ? Color.BLUE : (DesiredBuffer[finalI][finalJ] == Contents.STATIC) ? Color.gray(0.4) : Color.gray(0.6));
-            setNodeFromGridPane(grid, finalI, finalJ, rectangle);
-            CurrentBuffer[finalI][finalJ] = DesiredBuffer[finalI][finalJ];
+            rectangle.setFill((DesiredBuffer[x][y] == Contents.STATIC) ? Color.gray(0.4) : Color.gray(0.6));
+            if(DesiredBuffer[x][y]==Contents.BLUE){
+                if(n_piece==0||n_piece==3)rectangle.setFill(Color.AQUAMARINE);
+                if(n_piece==1||n_piece==4)rectangle.setFill(Color.PINK);
+                if(n_piece==2||n_piece==5)rectangle.setFill(Color.LEMONCHIFFON);
+                if(n_piece==6)rectangle.setFill(Color.TOMATO);
+            }
+            setNodeFromGridPane(grid, x, y, rectangle);
+            CurrentBuffer[x][y] = DesiredBuffer[x][y];
         }
     }
-
     private class Difficulty implements Runnable {
         @Override
         public void run() {

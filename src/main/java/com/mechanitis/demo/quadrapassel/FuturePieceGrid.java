@@ -30,7 +30,6 @@ public class FuturePieceGrid extends GridPane {
             }
         }
     }
-
     Piece piece;
     int npiece;
     Random r = new Random();

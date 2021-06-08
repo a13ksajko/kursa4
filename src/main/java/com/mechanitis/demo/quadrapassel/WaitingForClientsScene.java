@@ -10,7 +10,7 @@ public class WaitingForClientsScene extends Scene {
         super(root);
         VBox rootpane = (VBox) root;
         TextField field = new TextField();
-        field.setText("Waiting for client... "+app.serverSocket.getInetAddress());
+        field.setText("Waiting for client... ");
         rootpane.getChildren().add(field);
     }
 }

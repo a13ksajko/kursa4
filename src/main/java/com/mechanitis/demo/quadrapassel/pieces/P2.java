@@ -11,6 +11,7 @@ public class P2 extends Piece {
         positions[0].matrix[1][1]=true;
         positions[0].matrix[1][2]=true;
         positions[0].matrix[1][3]=true;
+
         positions[1].matrix[0][1]=true;
         positions[1].matrix[1][1]=true;
         positions[1].matrix[2][1]=true;

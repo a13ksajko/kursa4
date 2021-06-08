@@ -9,17 +9,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 public class ClientScene extends Scene {
-    TextField ServerHostnameDesc = new TextField();
+    TextField ServerHostnameDesc = new TextField(); //описание
     TextField ServerPortDesc = new TextField();
-    TextField ServerHostname = new TextField();
+    TextField ServerHostname = new TextField(); //поле ввода
     TextField ServerPort = new TextField();
     Button connect = new Button();
     Quadrapassel_App app;
     public ClientScene(Parent root, Quadrapassel_App app) {
-        super(root);
-        this.app=app;
-        ServerHostnameDesc.setText("Enter the server's hostname:");
-        ServerHostnameDesc.setEditable(false);
+        super(root);    //вызываем конструктор родителя
+        this.app=app;   //переприсваеваем приложение
+        ServerHostnameDesc.setText("Enter the server's hostname:"); //ставим текст
+        ServerHostnameDesc.setEditable(false); //запрещаем редактирование
         ServerPortDesc.setText("Enter the server's port:");
         ServerPortDesc.setEditable(false);
         connect.setText("Connect");
@@ -32,7 +32,7 @@ public class ClientScene extends Scene {
         connect.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                app.ClientMode(ServerHostname.getText(),Integer.decode(ServerPort.getText()));
+                app.ClientMode(ServerHostname.getText(),Integer.decode(ServerPort.getText()));      //запускаем клиент с тем, что было введено в поля ввода
             }
         });
     }

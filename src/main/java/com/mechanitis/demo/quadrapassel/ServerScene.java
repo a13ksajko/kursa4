@@ -19,15 +19,15 @@ public class ServerScene extends Scene {
         ServerPortDesc.setText("Enter the server's port:");
         ServerPortDesc.setEditable(false);
         connect.setText("Host");
+        VBox rootpane = (VBox) root;
+        rootpane.getChildren().add(ServerPortDesc);
+        rootpane.getChildren().add(ServerPort);
+        rootpane.getChildren().add(connect);
         connect.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 app.ServerMode(Integer.decode(ServerPort.getText()));
             }
         });
-        VBox rootpane = (VBox) root;
-        rootpane.getChildren().add(ServerPortDesc);
-        rootpane.getChildren().add(ServerPort);
-        rootpane.getChildren().add(connect);
     }
 }
