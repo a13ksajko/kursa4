@@ -13,7 +13,6 @@ public class ClientServerChoiceScene extends Scene {
     public ClientServerChoiceScene(Parent root, Quadrapassel_App app) {
         super(root);    //вызываем конструктор родителя
         VBox rootpane = (VBox) root;    //переприсваеваем корневой элемент
-        //this.fillProperty().setValue(Color.WHITE);  //зочем
         sp = new Button();  //кнопка single player
         sp.setMinSize(200,100); //размеры кнопки
         sp.setText("Single Player");    //надпись

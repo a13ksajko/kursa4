@@ -25,7 +25,7 @@ public class QuadrapasselGrid extends GridPane {
     int piecey = 0;
     Contents[][] DesiredBuffer;     //скрытый редактируемый буффер игр поля (нужен чтобы не перерисовывать всё)
     Random r = new Random();        //ГСЧ
-    private Queue<Movement> queue;  //очередь всего
+    private final Queue<Movement> queue;  //очередь всего
     FuturePieceGrid fpgrid;         //ссылка на решётку следующей фигуры
     GameplayScene scene;
     int chance=30;                  //шанс тетрис-момента
@@ -203,6 +203,8 @@ public class QuadrapasselGrid extends GridPane {
                 IntermediateBuffer[i][j] = (DesiredBuffer[i][j] == Contents.STATIC) ? Contents.STATIC : Contents.EMPTY;
             }
         }
+        //int gg = piece.;
+        //System.out.println("gasg"+gg);
         if (piece == null) {
             boolean fullline = true;
             for (int j = height - 1; j >= 0; j--) {
@@ -241,7 +243,7 @@ public class QuadrapasselGrid extends GridPane {
                     Rectangle rectangle = (Rectangle) getNodeFromGridPane(this, i, j);
                     int finalI = i;
                     int finalJ = j;
-                    Platform.runLater(new Syncer(rectangle, finalI, finalJ, this, fpgrid.npiece));
+                    Platform.runLater(new Syncer(rectangle, finalI, finalJ, this));
                 }
             }
         }
@@ -257,6 +259,7 @@ public class QuadrapasselGrid extends GridPane {
         if (npiece == 5) piece = new P6();
         if (npiece == 6) piece = new P7();
         fpgrid.NextPiece();
+        System.out.println("Номер фигуры при спавне =" + npiece);
         piecex = 5;
         piecey = 0;
         boolean[][] matrix = new boolean[4][4];
@@ -296,22 +299,27 @@ public class QuadrapasselGrid extends GridPane {
         final Integer y;
         Rectangle rectangle;
         QuadrapasselGrid grid;
-        int n_piece;
-        public Syncer(Rectangle rectangle,  Integer x,  Integer y, QuadrapasselGrid grid, int n_piece) {
+        public Syncer(Rectangle rectangle,  Integer x,  Integer y, QuadrapasselGrid grid) {
             this.rectangle = rectangle;
             this.x = x;
             this.y = y;
             this.grid = grid;
-            this.n_piece = n_piece;
         }
         @Override
         public void run() {
+            int n_fig = piece.check_num();
+            System.out.println("Номер фигуры при окр =" + n_fig);
             rectangle.setFill((DesiredBuffer[x][y] == Contents.STATIC) ? Color.gray(0.4) : Color.gray(0.6));
-            if(DesiredBuffer[x][y]==Contents.BLUE){
-                if(n_piece==0||n_piece==3)rectangle.setFill(Color.AQUAMARINE);
-                if(n_piece==1||n_piece==4)rectangle.setFill(Color.PINK);
-                if(n_piece==2||n_piece==5)rectangle.setFill(Color.LEMONCHIFFON);
-                if(n_piece==6)rectangle.setFill(Color.TOMATO);
+            if(DesiredBuffer[x][y]==Contents.BLUE)
+            //rectangle.setFill((DesiredBuffer[x][y] == Contents.BLUE) ? Color.AQUAMARINE : (n_piece==)
+            {
+                if(n_fig==0)rectangle.setFill(Color.AQUAMARINE);
+                if(n_fig==1)rectangle.setFill(Color.PINK);
+                if(n_fig==2)rectangle.setFill(Color.LEMONCHIFFON);
+                if(n_fig==3)rectangle.setFill(Color.BLACK);
+                if(n_fig==4)rectangle.setFill(Color.DARKGREEN);
+                if(n_fig==5)rectangle.setFill(Color.DARKSALMON);
+                if(n_fig==6)rectangle.setFill(Color.INDIGO);
             }
             setNodeFromGridPane(grid, x, y, rectangle);
             CurrentBuffer[x][y] = DesiredBuffer[x][y];

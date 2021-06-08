@@ -3,6 +3,7 @@ package com.mechanitis.demo.quadrapassel.pieces;
 public class P1 extends Piece{
     public P1(){
         npositions=1;
+        num_fig=0;
         positions=new Position[npositions];
         for(int i=0;i<npositions;i++)
             positions[i]=new Position();    //присваиваем первой позиции массив??

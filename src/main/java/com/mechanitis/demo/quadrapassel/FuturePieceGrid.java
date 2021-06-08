@@ -25,7 +25,7 @@ public class FuturePieceGrid extends GridPane {
                 for (int j = 0; j < height; j++) {
                     Rectangle r = (Rectangle) getNodeFromGridPane(fpgrid,i,j);
                     r.setFill(matrix[i][j]?Color.BLUE:Color.gray(0.6));
-                    setNodeFromGridPane(fpgrid,i,j,(Node) r);
+                    setNodeFromGridPane(fpgrid,i,j, r);
                 }
             }
         }

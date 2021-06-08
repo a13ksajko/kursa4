@@ -44,7 +44,7 @@ java {
 }
 
 private static String getJavaFXPlatform() {
-    def currentOS = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.currentOperatingSystem;
+    def currentOS = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.currentOperatingSystem
     if (currentOS.isWindows()) {
         return 'win'
     } else if (currentOS.isLinux()) {

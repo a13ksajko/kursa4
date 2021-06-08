@@ -45,7 +45,6 @@ public class GameplayScene extends Scene {
                 return;
             }
         AnchorPane rootpane = (AnchorPane) root;    //переприсваеваем корневой элемент
-        //this.fillProperty().setValue(Color.gray(0.2)); //заливка ебаная
         fpgrid = new FuturePieceGrid(); //создаём окно(хуету) для будущего элемента
         fpgrid.setHgap(5);  //гор/вертик отступ между полями в решётке будущего элемента
         fpgrid.setVgap(5);
@@ -65,7 +64,7 @@ public class GameplayScene extends Scene {
         AnchorPane.setTopAnchor(fpgrid, 40.0);
         AnchorPane.setRightAnchor(fpgrid, 10.0);
         rootpane.getChildren().add(fpgrid);
-        AnchorPane.setTopAnchor(scoretf, 10.0);
+        AnchorPane.setTopAnchor(scoretf, 5.0);
         AnchorPane.setRightAnchor(scoretf, 10.0);
         rootpane.getChildren().add(scoretf);
         funthread = new Thread(new FunReceiver());  //поток считывания команд с сокета

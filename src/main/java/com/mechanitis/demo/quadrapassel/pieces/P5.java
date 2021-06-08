@@ -3,6 +3,7 @@ package com.mechanitis.demo.quadrapassel.pieces;
 public class P5 extends Piece {
     public P5() {
         npositions = 4;
+        num_fig=4;
         positions = new Position[npositions];
         for(int i=0;i<npositions;i++)
             positions[i]=new Position();
