@@ -6,18 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="d17ac18b-fe26-48af-aead-1758a523d1ca" name="Default Changelist" comment="test">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/ClientScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/ClientScene.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/ClientServerChoiceScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/ClientServerChoiceScene.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/FuturePieceGrid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/FuturePieceGrid.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/GameplayScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/GameplayScene.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/QuadrapasselGrid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/QuadrapasselGrid.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P1.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P3.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P3.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P4.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P4.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P5.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P5.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P6.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P6.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P7.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/P7.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/Quadrapassel_App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/Quadrapassel_App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/ServerScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/ServerScene.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/Piece.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mechanitis/demo/quadrapassel/pieces/Piece.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -85,7 +80,7 @@
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RunManager" selected="Gradle.kursa4 [run]">
     <configuration default="true" type="GradleRunConfiguration" factoryName="Gradle">
@@ -213,7 +208,14 @@
       <option name="project" value="LOCAL" />
       <updated>1623157337313</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="test">
+      <created>1623195995159</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1623195995159</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">

@@ -11,21 +11,21 @@ import javafx.scene.paint.Color;
 public class ClientServerChoiceScene extends Scene {
     Button client, server, sp;
     public ClientServerChoiceScene(Parent root, Quadrapassel_App app) {
-        super(root);    //вызываем конструктор родителя
-        VBox rootpane = (VBox) root;    //переприсваеваем корневой элемент
-        sp = new Button();  //кнопка single player
-        sp.setMinSize(200,100); //размеры кнопки
-        sp.setText("Single Player");    //надпись
+        super(root);
+        VBox rootpane = (VBox) root;
+        sp = new Button();
+        sp.setMinSize(200,100);
+        sp.setText("Single Player");
         client = new Button();
         client.setMinSize(200,100);
         client.setText("Client");
         server= new Button();
         server.setMinSize(200,100);
         server.setText("Server");
-        rootpane.getChildren().add(client);     //добавляем кнопки к корневому элементу
+        rootpane.getChildren().add(client);
         rootpane.getChildren().add(server);
         rootpane.getChildren().add(sp);
-        client.setOnAction(new EventHandler<ActionEvent>() {    //когда нажатие происходит вызывается handle ...
+        client.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 app.ClientInit();

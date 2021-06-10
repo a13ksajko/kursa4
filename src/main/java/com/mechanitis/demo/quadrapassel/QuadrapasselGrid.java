@@ -13,29 +13,29 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class QuadrapasselGrid extends GridPane {
-    final Thread queueProcessor;    //поток-обработчик очереди инструкций
-    final Thread simulator;         //поток сдвига детали вниз (с определённым дилеем)
-    final Thread difficultyThread;  //поток понижающий дилей
-    public Integer width, height;   //размеры решётки
-    Object lock = new Object();     //мьютекс для очереди
-    Contents[][] CurrentBuffer;     //видимое игровое поле
-    int delay = 350;                //задержка
-    Piece piece = null;             //активная (падающая) фигура
-    int piecex = 0;                 //координаты левой верхней точки фигуры
+    final Thread queueProcessor;
+    final Thread simulator;
+    final Thread difficultyThread;
+    public Integer width, height;
+    Object lock = new Object();
+    Contents[][] CurrentBuffer;
+    int delay = 350;
+    Piece piece = null;
+    int piecex = 0;
     int piecey = 0;
-    Contents[][] DesiredBuffer;     //скрытый редактируемый буффер игр поля (нужен чтобы не перерисовывать всё)
-    Random r = new Random();        //ГСЧ
-    private final Queue<Movement> queue;  //очередь всего
-    FuturePieceGrid fpgrid;         //ссылка на решётку следующей фигуры
+    Contents[][] DesiredBuffer;
+    Random r = new Random();
+    private final Queue<Movement> queue;
+    FuturePieceGrid fpgrid;
     GameplayScene scene;
-    int chance=30;                  //шанс тетрис-момента
+    int chance=50;
     public QuadrapasselGrid(Integer width, Integer height, FuturePieceGrid fpgrid, GameplayScene gameplayScene) {
-        super();                    //вызываем конструктор родителя
-        this.scene=gameplayScene;   //переприсвааеваем ссылки из параметров
+        super();
+        this.scene=gameplayScene;
         this.height = height;
         this.width = width;
         this.fpgrid=fpgrid;
-        CurrentBuffer = new Contents[width][height];    //инициализируем буфферы
+        CurrentBuffer = new Contents[width][height];
         DesiredBuffer = new Contents[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -47,17 +47,16 @@ public class QuadrapasselGrid extends GridPane {
                 CurrentBuffer[i][j] = Contents.EMPTY;
                 DesiredBuffer[i][j] = Contents.EMPTY;
             }
-        }                                               //конец инициализации
-        queue = new LinkedList<Movement>();             //создаём список с интерфейсом очереди
-        SpawnNewPiece();                                //генерируем новую фигуру на игровом поле
-        queueProcessor = new Thread(new QueueProcessor());  //стартуем!!
+        }
+        queue = new LinkedList<Movement>();
+        SpawnNewPiece();
+        queueProcessor = new Thread(new QueueProcessor());
         queueProcessor.start();
         simulator = new Thread(new Simulator());
         simulator.start();
         difficultyThread= new Thread(new Difficulty());
         difficultyThread.start();
     }
-
     public static Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
         for (Node node : gridPane.getChildren()) {
             if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
@@ -68,53 +67,53 @@ public class QuadrapasselGrid extends GridPane {
     }
 
     public static Node setNodeFromGridPane(GridPane gridPane, int col, int row, Node newnode) {
-        Node tobereplaced = null;       //создаём пустую ссылку для старого квадрата, который впоследствии будет заменён на новый
+        Node tobereplaced = null;
         for (Node node : gridPane.getChildren()) {
             if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
-                tobereplaced = node;        //находим старый нужный элемент списка и берём на него ссылку
+                tobereplaced = node;
                 break;
             }
         }
-        gridPane.getChildren().set(gridPane.getChildren().indexOf(tobereplaced), newnode);      //заменили мать
+        gridPane.getChildren().set(gridPane.getChildren().indexOf(tobereplaced), newnode);
         return null;
     }
 
-    public synchronized void queueMove(Movement move) {//добавить любое действие в очередь
-        queue.add(move);        //добавить действие в очередь
-        synchronized (lock) {   //потоку, ждущему на замке, выслать уведомление
+    public synchronized void queueMove(Movement move) {
+        queue.add(move);
+        synchronized (lock) {
             lock.notify();
         }
     }
 
     private void processQueue() {
         if(queue.isEmpty())return;
-        Movement move = queue.remove(); //взять действие и удалить его из очереди
-        if(move==Movement.FUN){         //елси противник прокинул fun, то мы его обрабатываем
+        Movement move = queue.remove();
+        if(move==Movement.FUN){
             Fun();
         }
-        if(piece == null)return;        //если акт фигуры нет, вiйди разбiйник
+        if(piece == null)return;
         if (move == Movement.DOWN) {
             boolean[][] matrix = new boolean[4][4];
             int piecey_new = piecey + 1;
             for (int i = 0; i < 4; i++)
                 for (int j = 0; j < 4; j++) {
-                    if ((piecex + i >= width) || (piecex + i < 0)) {    //за гранью реальности
+                    if ((piecex + i >= width) || (piecex + i < 0)) {
                         matrix[i][j] = true;
                         continue;
                     }
-                    if ((piecey_new + j >= height) || (piecey_new + j < 0)) {   //за гранью нереальности (а похуй)
+                    if ((piecey_new + j >= height) || (piecey_new + j < 0)) {
                         matrix[i][j] = true;
                         continue;
                     }
                     matrix[i][j] = (DesiredBuffer[piecex + i][piecey_new + j] == Contents.STATIC);
                 }
-            if (!piece.checkThisPosition(matrix)) { //акт фигуру, которая не может упасть, делаем в статик
+            if (!piece.checkThisPosition(matrix)) {
                 matrix = piece.getCurrentPosition();
                 for (int i = 0; i < 4; i++)
                     for (int j = 0; j < 4; j++) {
                         if (matrix[i][j]) DesiredBuffer[piecex + i][piecey + j] = Contents.STATIC;
                     }
-                piece = null;   //вызываем новую фигуру
+                piece = null;
             } else {
                 piecey = piecey_new;
             }
@@ -195,7 +194,6 @@ public class QuadrapasselGrid extends GridPane {
             DesiredBuffer[i][height-1]=Contents.STATIC;
         }
     }
-
     private void redraw() {
         Contents[][] IntermediateBuffer = new Contents[width][height];
         for (int i = 0; i < width; i++) {
@@ -203,8 +201,6 @@ public class QuadrapasselGrid extends GridPane {
                 IntermediateBuffer[i][j] = (DesiredBuffer[i][j] == Contents.STATIC) ? Contents.STATIC : Contents.EMPTY;
             }
         }
-        //int gg = piece.;
-        //System.out.println("gasg"+gg);
         if (piece == null) {
             boolean fullline = true;
             for (int j = height - 1; j >= 0; j--) {
@@ -259,7 +255,6 @@ public class QuadrapasselGrid extends GridPane {
         if (npiece == 5) piece = new P6();
         if (npiece == 6) piece = new P7();
         fpgrid.NextPiece();
-        System.out.println("Номер фигуры при спавне =" + npiece);
         piecex = 5;
         piecey = 0;
         boolean[][] matrix = new boolean[4][4];
@@ -308,18 +303,16 @@ public class QuadrapasselGrid extends GridPane {
         @Override
         public void run() {
             int n_fig = piece.check_num();
-            System.out.println("Номер фигуры при окр =" + n_fig);
-            rectangle.setFill((DesiredBuffer[x][y] == Contents.STATIC) ? Color.gray(0.4) : Color.gray(0.6));
+            rectangle.setFill((DesiredBuffer[x][y] == Contents.STATIC) ? Color.gray(0.4) : Color.gray(0.6));//норм условие
             if(DesiredBuffer[x][y]==Contents.BLUE)
-            //rectangle.setFill((DesiredBuffer[x][y] == Contents.BLUE) ? Color.AQUAMARINE : (n_piece==)
             {
-                if(n_fig==0)rectangle.setFill(Color.AQUAMARINE);
-                if(n_fig==1)rectangle.setFill(Color.PINK);
-                if(n_fig==2)rectangle.setFill(Color.LEMONCHIFFON);
-                if(n_fig==3)rectangle.setFill(Color.BLACK);
-                if(n_fig==4)rectangle.setFill(Color.DARKGREEN);
-                if(n_fig==5)rectangle.setFill(Color.DARKSALMON);
-                if(n_fig==6)rectangle.setFill(Color.INDIGO);
+                if(n_fig==0)rectangle.setFill(Color.TURQUOISE);
+                if(n_fig==1)rectangle.setFill(Color.CHARTREUSE);
+                if(n_fig==2)rectangle.setFill(Color.ORCHID);
+                if(n_fig==3)rectangle.setFill(Color.RED);
+                if(n_fig==4)rectangle.setFill(Color.ROYALBLUE);
+                if(n_fig==5)rectangle.setFill(Color.PALEGREEN);
+                if(n_fig==6)rectangle.setFill(Color.BROWN);
             }
             setNodeFromGridPane(grid, x, y, rectangle);
             CurrentBuffer[x][y] = DesiredBuffer[x][y];

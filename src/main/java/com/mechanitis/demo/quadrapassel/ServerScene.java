@@ -25,9 +25,7 @@ public class ServerScene extends Scene {
         rootpane.getChildren().add(connect);
         connect.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent event) {
-                app.ServerMode(Integer.decode(ServerPort.getText()));
-            }
+            public void handle(ActionEvent event) {app.ServerMode(Integer.decode(ServerPort.getText())); }
         });
     }
 }

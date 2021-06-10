@@ -20,7 +20,6 @@ public class FuturePieceGrid extends GridPane {
         @Override
         public void run() {
             boolean[][] matrix = piece.getCurrentPosition();
-
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
                     Rectangle r = (Rectangle) getNodeFromGridPane(fpgrid,i,j);
@@ -43,7 +42,6 @@ public class FuturePieceGrid extends GridPane {
         }
         return null;
     }
-
     public static Node setNodeFromGridPane(GridPane gridPane, int col, int row, Node newnode) {
         Node tobereplaced = null;
         for (Node node : gridPane.getChildren()) {
@@ -55,7 +53,6 @@ public class FuturePieceGrid extends GridPane {
         gridPane.getChildren().set(gridPane.getChildren().indexOf(tobereplaced), newnode);
         return null;
     }
-
     public FuturePieceGrid(){
         super();
         for (int i = 0; i < width; i++) {
@@ -79,6 +76,5 @@ public class FuturePieceGrid extends GridPane {
         if (npiece == 5) piece = new P6();
         if (npiece == 6) piece = new P7();
         Platform.runLater(new MyRunnable(this,piece));
-
     }
 }

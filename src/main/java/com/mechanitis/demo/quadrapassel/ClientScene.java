@@ -6,21 +6,24 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 public class ClientScene extends Scene {
-    TextField ServerHostnameDesc = new TextField(); //описание
+    TextField ServerHostnameDesc = new TextField();
     TextField ServerPortDesc = new TextField();
-    TextField ServerHostname = new TextField(); //поле ввода
+    TextField ServerHostname = new TextField();
     TextField ServerPort = new TextField();
     Button connect = new Button();
+    double width;
+    double height;
     Quadrapassel_App app;
     public ClientScene(Parent root, Quadrapassel_App app) {
-        super(root);    //вызываем конструктор родителя
-        this.app=app;   //переприсваеваем приложение
-        ServerHostnameDesc.setText("Enter the server's hostname:"); //ставим текст
-        ServerHostnameDesc.setEditable(false); //запрещаем редактирование
-        ServerPortDesc.setText("Enter the server's port:");
+        super(root);
+        this.app=app;
+        ServerHostnameDesc.setText("Enter hostname:");
+        ServerHostnameDesc.setEditable(false);
+        ServerPortDesc.setText("Enter port:");
         ServerPortDesc.setEditable(false);
         connect.setText("Connect");
         VBox rootpane = (VBox) root;
@@ -32,7 +35,7 @@ public class ClientScene extends Scene {
         connect.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                app.ClientMode(ServerHostname.getText(),Integer.decode(ServerPort.getText()));      //запускаем клиент с тем, что было введено в поля ввода
+                app.ClientMode(ServerHostname.getText(),Integer.decode(ServerPort.getText()));
             }
         });
     }

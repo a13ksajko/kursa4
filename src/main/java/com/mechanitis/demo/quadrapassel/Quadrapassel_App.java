@@ -1,5 +1,5 @@
 package com.mechanitis.demo.quadrapassel;
-//класс самого приложения
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -28,26 +28,26 @@ import java.net.UnknownHostException;
 
 public class Quadrapassel_App extends Application{
     class WaitForClient implements Runnable{
-        Quadrapassel_App app;   //app - ссылка на приложение
+        Quadrapassel_App app;
         public WaitForClient(Quadrapassel_App app){
             this.app=app;
-        }   //конструктор
+        }
         @Override
-        public void run() { //создаёт геймплей-сцену в режиме сервера
+        public void run() {
             try {
-                socket=serverSocket.accept();   //получаем соединение клиента с сервером
+                socket=serverSocket.accept();
             } catch (IOException e) {
                 return;
             }
-            gameplayScene = new GameplayScene(new AnchorPane(), 500, 700, socket, app);   //создаём новую сцену игры, передавая в неё полученное соединение и ссылку на приложение
+            gameplayScene = new GameplayScene(new AnchorPane(), 500, 700, socket, app);
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    stage.close();  //закрывает текующее окно (waiting for client)
-                    stage.setScene(gameplayScene);  //устанавливаем новую сцену
-                    stage.sizeToScene();    //перерасчитываем размеры будущего окна
-                    stage.show();   //показываем сцену (gameplayScene)
-                    stage.setOnCloseRequest(new EventHandler<WindowEvent>() {//на запрос о закрытии запускаем die
+                    stage.close();
+                    stage.setScene(gameplayScene);
+                    stage.sizeToScene();
+                    stage.show();
+                    stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                         @Override
                         public void handle(WindowEvent event) {
                             gameplayScene.Die();
@@ -58,24 +58,23 @@ public class Quadrapassel_App extends Application{
 
         }
     }
-    GameplayScene gameplayScene;    //окно с игровым полем
-    ClientServerChoiceScene clientServerChoiceScene;    //первая сцена
-    ClientScene clientScene;    //сцена клиента
-    ServerScene serverScene;    //сцена сервера
-    WaitingForClientsScene waitingForClientsScene;  //сцена ожидания подключения со стороны сервера
-    Stage stage;    //дефолтное окно
-    ServerSocket serverSocket;  //спец сокет, который будет ждать подключения, после чего станет обычным сокетом
-    Socket socket=null; //просто сокет
+    GameplayScene gameplayScene;
+    ClientServerChoiceScene clientServerChoiceScene;
+    ClientScene clientScene;
+    ServerScene serverScene;
+    WaitingForClientsScene waitingForClientsScene;
+    Stage stage;
+    ServerSocket serverSocket;
+    Socket socket=null;
     @Override
     public void start(Stage stage) {
         stage.initStyle(StageStyle.DECORATED);
         this.stage=stage;
-        clientServerChoiceScene = new ClientServerChoiceScene(new VBox(),this); //описываем объявление сцены главного меню с корневым элементом vbox
-        //stage.close(); //зочем
-        stage.setScene(clientServerChoiceScene);    //устанавливаем сцену
-        stage.setResizable(false);  //запрещаем разрабатывать размер
-        stage.sizeToScene();    //пересчёт размеров стэйджа под размер сцены
-        stage.show();   //показать сцену
+        clientServerChoiceScene = new ClientServerChoiceScene(new VBox(),this);
+        stage.setScene(clientServerChoiceScene);
+        stage.setResizable(false);
+        stage.sizeToScene();
+        stage.show();
     }
     public void ClientInit(){
         clientScene= new ClientScene(new VBox(),this);
@@ -91,8 +90,8 @@ public class Quadrapassel_App extends Application{
         stage.sizeToScene();
         stage.show();
     }
-    public void ClientMode(String hostname, int port){//функция подключения клиента к серверу
-        if(port!=0){    //port=0 при одиночной игре
+    public void ClientMode(String hostname, int port){
+        if(port!=0){
         try {
             socket = new Socket(InetAddress.getByName(hostname),port);
         } catch (IOException e) {
@@ -108,7 +107,7 @@ public class Quadrapassel_App extends Application{
         stage.close();
         stage.setScene(gameplayScene);
         stage.sizeToScene();
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {//если закрыли окно, то закрыть все потоки
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
                 gameplayScene.Die();
@@ -117,7 +116,7 @@ public class Quadrapassel_App extends Application{
         stage.show();
     }
     public void ServerMode(int port){
-        try {//будучи серваком ожидать прибытия на сервак клиентов
+        try {
             serverSocket = new ServerSocket(port, 0);
         } catch (IOException e) {
             return;
